@@ -9,6 +9,7 @@ import CvdPanel from '../components/color/CvdPanel'
 import ExportPanel from '../components/export/ExportPanel'
 import LivePreview from '../components/preview/LivePreview'
 import Toast from '../components/Toast'
+import PreviewPaletteBar from '../components/color/PreviewPaletteBar'
 ---
 
 <ToolLayout title="Inicio">
@@ -18,6 +19,10 @@ import Toast from '../components/Toast'
 
     <div class="mt-8">
       <ColorPicker client:idle />
+    </div>
+
+    <div class="mt-4">
+      <PreviewPaletteBar client:idle />
     </div>
 
     <div class="mt-6">

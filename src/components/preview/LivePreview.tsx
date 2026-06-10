@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useStore } from '@nanostores/react'
 import { $hex } from '../../stores/color.store'
 import { $semantic } from '../../stores/semantic.store'
@@ -7,6 +7,7 @@ import { $palettes } from '../../stores/palettes.store'
 import { $activeTab } from '../../stores/tabs.store'
 import { $previewPalette } from '../../stores/preview.store'
 import type { SemanticRoles, ContrastInfo, Palettes, HarmonyType } from '../../lib/types'
+import { darken, lighten } from '../../lib/color/manipulation'
 
 function getPaletteColors(
   palettes: Palettes,
@@ -43,20 +44,35 @@ export default function LivePreview({ tab }: Props) {
   const activePalette = useStore($previewPalette)
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number | null>(null)
-  const valuesRef = useRef({ hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette) })
+  const valuesRef = useRef({ hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette), dark: false })
+  const [previewDark, setPreviewDark] = useState(false)
 
-  valuesRef.current = { hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette) }
+  valuesRef.current = { hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette), dark: previewDark }
 
   useEffect(() => {
     let running = true
     const el = containerRef.current
     if (!el) return
 
+    function darkSemantic(s: SemanticRoles): SemanticRoles {
+      const darkBg = darken(s.background, 75) ?? '#111'
+      const darkSurface = lighten(darkBg, 5) ?? '#1a1a1a'
+      const darkCard = lighten(darkBg, 8) ?? '#222'
+      return {
+        ...s,
+        background: darkBg,
+        surface: darkSurface,
+        card: darkCard,
+        text: lighten(s.text, 85) ?? '#eee',
+      }
+    }
+
     function update() {
       if (!el || !running) return
-      const { hex: h, semantic: s, contrast: c, palette: p } = valuesRef.current
+      const { hex: h, semantic: s, contrast: c, palette: p, dark } = valuesRef.current
+      const target = dark ? darkSemantic(s) : s
       for (const [name, fn] of Object.entries(CSS_VARS)) {
-        el.style.setProperty(name, fn(h, s, c, p))
+        el.style.setProperty(name, fn(h, target, c, p))
       }
       rafRef.current = requestAnimationFrame(update)
     }
@@ -80,7 +96,7 @@ export default function LivePreview({ tab }: Props) {
           <span className="preview__dot" aria-hidden="true" />
         </div>
         <div className="preview__body">
-          <PreviewNavbar />
+          <PreviewNavbar previewDark={previewDark} onToggle={() => setPreviewDark(!previewDark)} />
           <PreviewHero />
           <PreviewCards />
           <PreviewButtons />
@@ -92,15 +108,28 @@ export default function LivePreview({ tab }: Props) {
   )
 }
 
-function PreviewNavbar() {
+function PreviewNavbar({ previewDark, onToggle }: { previewDark: boolean; onToggle: () => void }) {
   return (
     <nav className="preview-navbar" aria-label="Previsualización de navegación">
-      <span className="preview-navbar__logo">Logo</span>
-      <div className="preview-navbar__links">
+      <div className="preview-navbar__brand">
+        <span className="preview-navbar__logo-icon">N</span>
+        <span className="preview-navbar__logo">NaN</span>
+      </div>
+      <div className="preview-navbar__center">
         <a className="preview-navbar__link" href="#">Inicio</a>
         <a className="preview-navbar__link" href="#">Productos</a>
         <a className="preview-navbar__link" href="#">Contacto</a>
       </div>
+      <button
+        className={`preview-navbar__theme-btn ${previewDark ? 'preview-navbar__theme-btn--dark' : ''}`}
+        onClick={onToggle}
+        aria-pressed={previewDark}
+        aria-label={previewDark ? 'Modo claro' : 'Modo oscuro'}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
     </nav>
   )
 }

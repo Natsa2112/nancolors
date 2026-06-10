@@ -1,27 +1,40 @@
 import { useState, useEffect, useRef } from 'react'
 import { useStore } from '@nanostores/react'
 import { $hex, $error, setHex } from '../../stores/color.store'
-
-function stripHash(h: string): string {
-  return h.replace(/^#/, '')
-}
-
-function handleNativePicker(e: React.ChangeEvent<HTMLInputElement>) {
-  setHex(e.target.value)
-}
+import ColorPickerPopover from './ColorPickerPopover'
 
 export default function ColorPicker() {
   const hex = useStore($hex)
   const error = useStore($error)
-  const nativeInputRef = useRef<HTMLInputElement>(null)
-  const [inputValue, setInputValue] = useState(stripHash(hex))
+  const [inputValue, setInputValue] = useState(hex.replace(/^#/, ''))
+  const [open, setOpen] = useState(false)
   const isFocused = useRef(false)
+  const swatchRef = useRef<HTMLDivElement>(null)
+  const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null)
 
   useEffect(() => {
     if (!isFocused.current) {
-      setInputValue(stripHash(hex))
+      setInputValue(hex.replace(/^#/, ''))
     }
   }, [hex])
+
+  function handleSwatchClick() {
+    if (swatchRef.current) {
+      setTriggerRect(swatchRef.current.getBoundingClientRect())
+    }
+    setOpen(true)
+  }
+
+  function handleSwatchKey(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handleSwatchClick()
+    }
+  }
+
+  function handlePopoverChange(color: string) {
+    setHex(color)
+  }
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const raw = e.target.value.replace(/[^0-9a-fA-F]/g, '').slice(0, 6)
@@ -48,35 +61,19 @@ export default function ColorPicker() {
     }
   }
 
-  function handleSwatchKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      nativeInputRef.current?.click()
-    }
-  }
-
   return (
     <div className="color-picker">
       <div className="color-picker__preview">
         <div
-          className="color-swatch color-swatch--lg"
+          ref={swatchRef}
+          className="color-picker__swatch"
           style={{ backgroundColor: hex }}
           role="button"
           tabIndex={0}
-          aria-label={`Abrir selector de color. Color actual: ${hex}`}
-          onClick={() => nativeInputRef.current?.click()}
-          onKeyDown={handleSwatchKeyDown}
-        >
-          <input
-            ref={nativeInputRef}
-            type="color"
-            value={hex}
-            onChange={handleNativePicker}
-            className="sr-only"
-            tabIndex={-1}
-            aria-hidden="true"
-          />
-        </div>
+          aria-label={`Color actual: ${hex}. Click para abrir selector`}
+          onClick={handleSwatchClick}
+          onKeyDown={handleSwatchKey}
+        />
         <div>
           <label className="sr-only" htmlFor="hex-input">Color en hexadecimal</label>
           <div className="color-picker__hex-wrapper">
@@ -103,6 +100,15 @@ export default function ColorPicker() {
           )}
         </div>
       </div>
+
+      {open && (
+        <ColorPickerPopover
+          color={hex}
+          onChange={handlePopoverChange}
+          onClose={() => setOpen(false)}
+          triggerRect={triggerRect}
+        />
+      )}
     </div>
   )
 }
