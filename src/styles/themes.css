@@ -1,0 +1,22 @@
+/* ========== DARK MODE (futuro) ========== */
+/*
+[data-theme="dark"] {
+  --color-background: #121212;
+  --color-foreground: #e0e0e0;
+  --color-surface: #1e1e1e;
+  --color-border: #333;
+  --color-text-muted: #999;
+  --card-bg: #1e1e1e;
+  --input-bg: #1e1e1e;
+}
+*/
+
+/* ========== HIGH CONTRAST (futuro) ========== */
+/*
+[data-theme="high-contrast"] {
+  --color-primary: #0000ff;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-link: #0000ff;
+}
+*/
