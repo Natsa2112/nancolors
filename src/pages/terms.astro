@@ -1,21 +1,27 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
+import ToolLayout from '../layouts/ToolLayout.astro'
 ---
 
-<BaseLayout title="Términos de uso">
-  <article class="container section" style="max-width: 768px; margin-inline: auto;">
-    <h1>Términos de Uso</h1>
+<ToolLayout title="Términos de uso">
+  <section slot="tool">
+    <article style="max-width: 768px;">
+      <h1>Términos de Uso</h1>
 
-    <h2 class="mt-8">1. Aceptación</h2>
-    <p class="mt-2">Al usar NaN Colors aceptas estos términos. Si no estás de acuerdo, no uses la herramienta.</p>
+      <h2 class="mt-8">1. Aceptación</h2>
+      <p class="mt-2">Al usar NaN Colors aceptas estos términos. Si no estás de acuerdo, no uses la herramienta.</p>
 
-    <h2 class="mt-8">2. Uso</h2>
-    <p class="mt-2">La herramienta se proporciona "tal cual". No garantizamos disponibilidad continua ni resultados libres de errores.</p>
+      <h2 class="mt-8">2. Uso</h2>
+      <p class="mt-2">La herramienta se proporciona "tal cual". No garantizamos disponibilidad continua ni resultados libres de errores.</p>
 
-    <h2 class="mt-8">3. Propiedad intelectual</h2>
-    <p class="mt-2">El código y diseño de NaN Colors están bajo licencia MIT. Los colores y paletas generados son de uso libre.</p>
+      <h2 class="mt-8">3. Propiedad intelectual</h2>
+      <p class="mt-2">El código y diseño de NaN Colors están bajo licencia MIT. Los colores y paletas generados son de uso libre.</p>
 
-    <h2 class="mt-8">4. Limitación</h2>
-    <p class="mt-2">No nos hacemos responsables por daños derivados del uso de esta herramienta.</p>
-  </article>
-</BaseLayout>
+      <h2 class="mt-8">4. Limitación</h2>
+      <p class="mt-2">No nos hacemos responsables por daños derivados del uso de esta herramienta.</p>
+    </article>
+  </section>
+
+  <section slot="sidebar">
+    <p class="text-sm text-muted">Términos y condiciones de uso.</p>
+  </section>
+</ToolLayout>

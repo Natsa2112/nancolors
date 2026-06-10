@@ -1,24 +1,30 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
+import ToolLayout from '../layouts/ToolLayout.astro'
 ---
 
-<BaseLayout title="Acerca">
-  <article class="container section" style="max-width: 768px; margin-inline: auto;">
-    <h1>Acerca de NaN Colors</h1>
-    <p class="text-muted mt-4">
-      NaN Colors es una herramienta de color inteligente que te ayuda a crear paletas,
-      evaluar contraste y previsualizar diseños desde un solo color base.
-    </p>
+<ToolLayout title="Acerca">
+  <section slot="tool">
+    <article style="max-width: 768px;">
+      <h1>Acerca de NaN Colors</h1>
+      <p class="text-muted mt-4">
+        NaN Colors es una herramienta de color inteligente que te ayuda a crear paletas,
+        evaluar contraste y previsualizar diseños desde un solo color base.
+      </p>
 
-    <h2 class="mt-8">Algoritmos</h2>
-    <ul class="mt-2">
-      <li><strong>Armonías:</strong> Complementaria, Análoga, Triádica, Monocromática, Split-Complementaria, Tetrádica</li>
-      <li><strong>Contraste WCAG:</strong> Evaluación AA/AAA según luminance relativa (fórmula WCAG 2.1)</li>
-      <li><strong>Semántico:</strong> Generación heurística de 12 roles de color desde un color base</li>
-      <li><strong>Simulación CVD:</strong> Matrices Brettel-Viénot-Mollon para protanopia, deuteranopia, tritanopia</li>
-    </ul>
+      <h2 class="mt-8">Algoritmos</h2>
+      <ul class="mt-2">
+        <li><strong>Armonías:</strong> Complementaria, Análoga, Triádica, Monocromática, Split-Complementaria, Tetrádica</li>
+        <li><strong>Contraste WCAG:</strong> Evaluación AA/AAA según luminance relativa (fórmula WCAG 2.1)</li>
+        <li><strong>Semántico:</strong> Generación heurística de 12 roles de color desde un color base</li>
+        <li><strong>Simulación CVD:</strong> Matrices Brettel-Viénot-Mollon para protanopia, deuteranopia, tritanopia</li>
+      </ul>
 
-    <h2 class="mt-8">Tecnologías</h2>
-    <p class="mt-2">Astro, React, TypeScript, Culori, Nano Stores, CSS puro con Custom Properties.</p>
-  </article>
-</BaseLayout>
+      <h2 class="mt-8">Tecnologías</h2>
+      <p class="mt-2">Astro, React, TypeScript, Culori, Nano Stores, CSS puro con Custom Properties.</p>
+    </article>
+  </section>
+
+  <section slot="sidebar">
+    <p class="text-sm text-muted">Información sobre la herramienta y sus algoritmos.</p>
+  </section>
+</ToolLayout>

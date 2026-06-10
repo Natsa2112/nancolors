@@ -1,21 +1,27 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
+import ToolLayout from '../layouts/ToolLayout.astro'
 ---
 
-<BaseLayout title="Privacidad">
-  <article class="container section" style="max-width: 768px; margin-inline: auto;">
-    <h1>Política de Privacidad</h1>
+<ToolLayout title="Privacidad">
+  <section slot="tool">
+    <article style="max-width: 768px;">
+      <h1>Política de Privacidad</h1>
 
-    <h2 class="mt-8">Datos recopilados</h2>
-    <p class="mt-2">NaN Colors no recopila datos personales. No usamos cookies de rastreo ni almacenamos colores ingresados en servidores.</p>
+      <h2 class="mt-8">Datos recopilados</h2>
+      <p class="mt-2">NaN Colors no recopila datos personales. No usamos cookies de rastreo ni almacenamos colores ingresados en servidores.</p>
 
-    <h2 class="mt-8">Analítica</h2>
-    <p class="mt-2">Usamos Plausible Analytics, una herramienta que no usa cookies ni recopila datos personales. Solo contamos visitas de forma anónima.</p>
+      <h2 class="mt-8">Analítica</h2>
+      <p class="mt-2">Usamos Plausible Analytics, una herramienta que no usa cookies ni recopila datos personales. Solo contamos visitas de forma anónima.</p>
 
-    <h2 class="mt-8">Enlaces externos</h2>
-    <p class="mt-2">Esta página puede contener enlaces a sitios externos. No nos responsabilizamos por sus prácticas de privacidad.</p>
+      <h2 class="mt-8">Enlaces externos</h2>
+      <p class="mt-2">Esta página puede contener enlaces a sitios externos. No nos responsabilizamos por sus prácticas de privacidad.</p>
 
-    <h2 class="mt-8">Contacto</h2>
-    <p class="mt-2">Si tienes preguntas sobre esta política, contáctanos a través de GitHub.</p>
-  </article>
-</BaseLayout>
+      <h2 class="mt-8">Contacto</h2>
+      <p class="mt-2">Si tienes preguntas sobre esta política, contáctanos a través de GitHub.</p>
+    </article>
+  </section>
+
+  <section slot="sidebar">
+    <p class="text-sm text-muted">Política de privacidad de NaN Colors.</p>
+  </section>
+</ToolLayout>

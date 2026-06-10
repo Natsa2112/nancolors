@@ -3,21 +3,31 @@ import { useStore } from '@nanostores/react'
 import { $hex } from '../../stores/color.store'
 import { $semantic } from '../../stores/semantic.store'
 import { $contrast } from '../../stores/contrast.store'
+import { $palettes } from '../../stores/palettes.store'
 import { $activeTab } from '../../stores/tabs.store'
-import type { SemanticRoles, ContrastInfo } from '../../lib/types'
+import { $previewPalette } from '../../stores/preview.store'
+import type { SemanticRoles, ContrastInfo, Palettes, HarmonyType } from '../../lib/types'
 
-const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo) => string> = {
+function getPaletteColors(
+  palettes: Palettes,
+  active: HarmonyType | null
+): string[] {
+  if (!active) return []
+  return palettes[active] ?? []
+}
+
+const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo, palette: string[]) => string> = {
   '--p-color-bg': (_, s) => s.background,
   '--p-color-text': (_, s) => s.text,
-  '--p-color-navbar-bg': (_, s) => s.surface,
+  '--p-color-navbar-bg': (_, s, __, p) => p[4] ?? p[3] ?? s.surface,
   '--p-color-navbar-text': (_, s) => s.text,
-  '--p-color-hero-bg': (hex) => hex,
+  '--p-color-hero-bg': (hex, _, __, p) => p[0] ?? hex,
   '--p-color-hero-text': (_, s) => s.text,
-  '--p-color-card-bg': (_, s) => s.card,
+  '--p-color-card-bg': (_, s, __, p) => p[2] ?? s.card,
   '--p-color-card-text': (_, s) => s.text,
   '--p-color-card-border': (_, s) => s.surface,
-  '--p-color-btn-bg': (_, s) => s.button,
-  '--p-color-btn-text': (_, s) => s.button === s.text ? s.card : s.text,
+  '--p-color-btn-bg': (_, s, __, p) => p[1] ?? s.button,
+  '--p-color-btn-text': (_, s, __, p) => s.text,
 }
 
 interface Props {
@@ -29,11 +39,13 @@ export default function LivePreview({ tab }: Props) {
   const hex = useStore($hex)
   const semantic = useStore($semantic)
   const contrast = useStore($contrast)
+  const palettes = useStore($palettes)
+  const activePalette = useStore($previewPalette)
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number | null>(null)
-  const valuesRef = useRef({ hex, semantic, contrast })
+  const valuesRef = useRef({ hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette) })
 
-  valuesRef.current = { hex, semantic, contrast }
+  valuesRef.current = { hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette) }
 
   useEffect(() => {
     let running = true
@@ -42,9 +54,9 @@ export default function LivePreview({ tab }: Props) {
 
     function update() {
       if (!el || !running) return
-      const { hex: h, semantic: s, contrast: c } = valuesRef.current
+      const { hex: h, semantic: s, contrast: c, palette: p } = valuesRef.current
       for (const [name, fn] of Object.entries(CSS_VARS)) {
-        el.style.setProperty(name, fn(h, s, c))
+        el.style.setProperty(name, fn(h, s, c, p))
       }
       rafRef.current = requestAnimationFrame(update)
     }
