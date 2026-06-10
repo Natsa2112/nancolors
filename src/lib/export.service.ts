@@ -2,9 +2,6 @@ import type { RGB, HSL, OKLCH } from './types'
 
 export function toCSSVariables(
   hex: string,
-  rgb: RGB,
-  hsl: HSL,
-  oklch: OKLCH,
   palettes: Record<string, string[]>
 ): string {
   const lines: string[] = [':root {', `  --color-base: ${hex};`]
@@ -27,18 +24,14 @@ export function toTailwindConfig(
   palettes: Record<string, string[]>
 ): string {
   const palettesObj: Record<string, Record<string, string>> = {}
+  const p: Record<string, string[]> = { ...palettes, base: [hex] }
 
-  const formatName = (name: string) =>
-    name.replace(/([A-Z])/g, '-$1').toLowerCase()
-
-  palettes[formatName('base')] = [hex]
-
-  for (const [type, colors] of Object.entries(palettes)) {
+  for (const [type, colors] of Object.entries(p)) {
     const entry: Record<string, string> = {}
     colors.forEach((c, i) => {
       entry[String(i + 1)] = c
     })
-    palettesObj[formatName(type)] = entry
+    palettesObj[type] = entry
   }
 
   return JSON.stringify({ theme: { extend: { colors: palettesObj } } }, null, 2)

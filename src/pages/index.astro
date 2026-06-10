@@ -1,6 +1,12 @@
 ---
 import ToolLayout from '../layouts/ToolLayout.astro'
+import Tabs from '../components/Tabs'
 import ColorPicker from '../components/color/ColorPicker'
+import PaletteGenerator from '../components/color/PaletteGenerator'
+import SemanticPanel from '../components/color/SemanticPanel'
+import ContrastPanel from '../components/color/ContrastPanel'
+import CvdPanel from '../components/color/CvdPanel'
+import ExportPanel from '../components/export/ExportPanel'
 import LivePreview from '../components/preview/LivePreview'
 ---
 
@@ -13,12 +19,36 @@ import LivePreview from '../components/preview/LivePreview'
       <ColorPicker client:idle />
     </div>
 
-    <div class="mt-8">
-      <LivePreview client:idle />
+    <div class="mt-6">
+      <Tabs client:idle />
+    </div>
+
+    <div class="mt-4">
+      <PaletteGenerator tab="palettes" client:idle />
+    </div>
+
+    <div class="mt-4">
+      <SemanticPanel tab="semantic" client:idle />
+    </div>
+
+    <div class="mt-4">
+      <ContrastPanel tab="contrast" client:idle />
+    </div>
+
+    <div class="mt-4">
+      <CvdPanel tab="contrast" client:idle />
+    </div>
+
+    <div class="mt-4">
+      <LivePreview tab="preview" client:idle />
+    </div>
+
+    <div class="mt-4">
+      <ExportPanel tab="export" client:idle />
     </div>
   </section>
 
   <section slot="sidebar">
-    <p class="text-sm text-muted">Selecciona un color para ver paletas, contraste y vista previa.</p>
+    <p class="text-sm text-muted">Selecciona un color y navega entre las herramientas.</p>
   </section>
 </ToolLayout>

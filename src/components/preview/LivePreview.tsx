@@ -3,6 +3,7 @@ import { useStore } from '@nanostores/react'
 import { $hex } from '../../stores/color.store'
 import { $semantic } from '../../stores/semantic.store'
 import { $contrast } from '../../stores/contrast.store'
+import { $activeTab } from '../Tabs'
 import type { SemanticRoles, ContrastInfo } from '../../lib/types'
 
 const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo) => string> = {
@@ -10,7 +11,7 @@ const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo) 
   '--p-color-text': (_, s) => s.text,
   '--p-color-navbar-bg': (_, s) => s.surface,
   '--p-color-navbar-text': (_, s) => s.text,
-  '--p-color-hero-bg': (hex, _) => hex,
+  '--p-color-hero-bg': (hex) => hex,
   '--p-color-hero-text': (_, s) => s.text,
   '--p-color-card-bg': (_, s) => s.card,
   '--p-color-card-text': (_, s) => s.text,
@@ -19,7 +20,14 @@ const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo) 
   '--p-color-btn-text': (_, s) => s.button === s.text ? s.card : s.text,
 }
 
-export default function LivePreview() {
+interface Props {
+  tab: string
+}
+
+export default function LivePreview({ tab }: Props) {
+  const activeTab = useStore($activeTab)
+  if (activeTab !== tab) return null
+
   const hex = useStore($hex)
   const semantic = useStore($semantic)
   const contrast = useStore($contrast)

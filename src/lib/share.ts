@@ -1,4 +1,5 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string'
+import lzString from 'lz-string'
+const { compressToEncodedURIComponent, decompressFromEncodedURIComponent } = lzString
 
 export function encodePalette(hex: string): string {
   return compressToEncodedURIComponent(hex)
