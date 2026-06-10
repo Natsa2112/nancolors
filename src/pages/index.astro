@@ -1,18 +1,19 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
+import ToolLayout from '../layouts/ToolLayout.astro'
+import ColorPicker from '../components/color/ColorPicker'
 ---
 
-<BaseLayout title="Inicio">
-  <section class="section">
-    <div class="container">
-      <h1>NaN Colors</h1>
-      <p class="text-muted mt-2">Herramienta de color inteligente</p>
+<ToolLayout title="Inicio">
+  <section slot="tool">
+    <h1>NaN Colors</h1>
+    <p class="text-muted mt-2">Herramienta de color inteligente</p>
+
+    <div class="mt-8">
+      <ColorPicker client:idle />
     </div>
   </section>
 
-  <section class="section--sm">
-    <div class="container">
-      <p>Selecciona un color para comenzar.</p>
-    </div>
+  <section slot="sidebar">
+    <p class="text-sm text-muted">Selecciona un color para ver paletas, contraste y vista previa.</p>
   </section>
-</BaseLayout>
+</ToolLayout>

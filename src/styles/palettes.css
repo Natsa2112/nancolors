@@ -1,0 +1,111 @@
+/* ========== HARMONY SELECTOR ========== */
+.harmony-selector {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.harmony-btn {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  min-height: 44px;
+}
+
+.harmony-btn:hover {
+  background: var(--color-surface);
+}
+
+.harmony-btn[aria-selected="true"] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--white);
+}
+
+/* ========== PALETTE GRID ========== */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  gap: var(--space-2);
+}
+
+.palette-grid--sm {
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+}
+
+.palette-grid__swatch {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: transform 0.2s;
+  min-height: 44px;
+}
+
+.palette-grid__swatch:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+.palette-grid__swatch:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ========== PALETTE CARD ========== */
+.palette-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.palette-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.palette-card__title {
+  font-size: var(--text-sm);
+  font-weight: var(--text-weight-semibold);
+}
+
+.palette-card__count {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ========== COPY FEEDBACK ========== */
+.copy-feedback {
+  position: fixed;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-2) var(--space-4);
+  background: var(--gray-900);
+  color: var(--white);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-full);
+  z-index: 1000;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

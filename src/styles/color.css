@@ -1,0 +1,83 @@
+/* ========== COLOR SWATCH ========== */
+.color-swatch {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-swatch:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.color-swatch--sm {
+  width: 32px;
+  height: 32px;
+}
+
+.color-swatch--lg {
+  width: 64px;
+  height: 64px;
+}
+
+/* ========== COLOR BAR ========== */
+.color-bar {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.color-bar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.color-bar__label {
+  font-size: var(--text-xs);
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+
+/* ========== COLOR PICKER ========== */
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.color-picker__canvas {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.color-picker__preview {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.color-picker__hex-input {
+  width: 8em;
+}
+
+/* ========== RECENT SWATCHES ========== */
+.recent-swatches {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}

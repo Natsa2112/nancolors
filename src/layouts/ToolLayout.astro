@@ -1,0 +1,47 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import '../styles/components.css'
+import '../styles/navigation.css'
+import '../styles/color.css'
+import '../styles/palettes.css'
+
+export interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description } = Astro.props
+---
+
+<BaseLayout title={title} description={description}>
+  <header class="header" slot="header">
+    <div class="container header__inner">
+      <a href="/" class="header__logo">NaN</a>
+      <nav class="header__nav" aria-label="Navegación principal">
+        <a href="/" class="nav-link" aria-current="page">Inicio</a>
+        <a href="/about" class="nav-link">Acerca</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="grid grid--tool">
+      <div>
+        <slot name="tool" />
+      </div>
+      <aside>
+        <slot name="sidebar" />
+      </aside>
+    </div>
+  </div>
+
+  <footer class="footer" slot="footer">
+    <div class="container footer__inner">
+      <p class="footer__text">NaN Colors &copy; 2026</p>
+      <nav class="footer__links" aria-label="Enlaces legales">
+        <a href="/privacy" class="footer__link">Privacidad</a>
+        <a href="/terms" class="footer__link">Términos</a>
+      </nav>
+    </div>
+  </footer>
+</BaseLayout>
