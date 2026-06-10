@@ -3,7 +3,7 @@ import { useStore } from '@nanostores/react'
 import { $hex } from '../../stores/color.store'
 import { $semantic } from '../../stores/semantic.store'
 import { $contrast } from '../../stores/contrast.store'
-import { $activeTab } from '../Tabs'
+import { $activeTab } from '../../stores/tabs.store'
 import type { SemanticRoles, ContrastInfo } from '../../lib/types'
 
 const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo) => string> = {
@@ -36,12 +36,12 @@ export default function LivePreview({ tab }: Props) {
   valuesRef.current = { hex, semantic, contrast }
 
   useEffect(() => {
-    if (rafRef.current !== null) return
+    let running = true
     const el = containerRef.current
     if (!el) return
 
     function update() {
-      if (!el) return
+      if (!el || !running) return
       const { hex: h, semantic: s, contrast: c } = valuesRef.current
       for (const [name, fn] of Object.entries(CSS_VARS)) {
         el.style.setProperty(name, fn(h, s, c))
@@ -51,20 +51,21 @@ export default function LivePreview({ tab }: Props) {
 
     rafRef.current = requestAnimationFrame(update)
     return () => {
+      running = false
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current)
         rafRef.current = null
       }
     }
-  }, [])
+  }, [activeTab, tab])
 
   return (
-    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <div className="preview" ref={containerRef}>
         <div className="preview__toolbar">
-          <span className="preview__dot" />
-          <span className="preview__dot" />
-          <span className="preview__dot" />
+          <span className="preview__dot" aria-hidden="true" />
+          <span className="preview__dot" aria-hidden="true" />
+          <span className="preview__dot" aria-hidden="true" />
         </div>
         <div className="preview__body">
           <PreviewNavbar />

@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { $hex } from '../../stores/color.store'
-import { $activeTab } from '../Tabs'
+import { $activeTab } from '../../stores/tabs.store'
 import { simulateAll } from '../../lib/color/cvd'
 
 const CVD_LABELS: Record<string, string> = {
@@ -20,7 +20,7 @@ export default function CvdPanel({ tab }: Props) {
   const simulated = simulateAll(hex)
 
   return (
-    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <h3 className="text-sm text-bold mt-4 mb-2">Simulación CVD</h3>
       <p className="text-xs text-muted mb-3">
         Brettel-Viénot-Mollon: protanopia, deuteranopia, tritanopia.

@@ -7,7 +7,7 @@ const PAIRS: { label: string; fg: keyof SemanticRoles; bg: keyof SemanticRoles }
   { label: 'Texto sobre fondo', fg: 'text', bg: 'background' },
   { label: 'Texto sobre surface', fg: 'text', bg: 'surface' },
   { label: 'Texto sobre card', fg: 'text', bg: 'card' },
-  { label: 'Botón texto', fg: 'button', bg: 'button' },
+  { label: 'Botón texto', fg: 'text', bg: 'button' },
   { label: 'Link sobre fondo', fg: 'link', bg: 'background' },
 ]
 

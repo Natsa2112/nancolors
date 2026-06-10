@@ -15,6 +15,9 @@
   --gray-700: #ccc;
   --gray-900: #f5f5f5;
 
+  --code-bg: #0d0d0d;
+  --code-fg: #e0e0e0;
+
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   --button-bg: var(--blue-500);
   --button-text: var(--white);

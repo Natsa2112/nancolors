@@ -59,20 +59,6 @@ export interface ContrastInfo {
   scores: ContrastScore[]
 }
 
-export interface ColorState {
-  hex: string
-  rgb: RGB
-  hsl: HSL
-  oklch: OKLCH
-  luminance: number
-  palettes: Palettes
-  semantic: SemanticRoles
-  contrast: ContrastInfo
-  activeTab: string
-  isGenerating: boolean
-  error: string | null
-}
-
 export type HarmonyType =
   | 'complementary'
   | 'analogous'

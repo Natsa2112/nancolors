@@ -41,7 +41,23 @@
   font-family: var(--font-mono);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
-  min-height: 34px;
+  min-height: 44px;
+}
+
+.export-panel__format-btn:active {
+  background: var(--color-surface);
+}
+
+.export-panel__format-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.export-panel__format-btn:disabled,
+.export-panel__format-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .export-panel__format-btn + .export-panel__format-btn {
@@ -71,8 +87,8 @@
   max-height: 320px;
   padding: var(--space-3);
   border-radius: var(--radius-md);
-  background: var(--gray-900);
-  color: var(--gray-100);
+  background: var(--code-bg);
+  color: var(--code-fg);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   line-height: 1.6;
@@ -93,12 +109,12 @@
   border: 1px solid rgba(255,255,255,0.2);
   border-radius: var(--radius-sm);
   background: rgba(255,255,255,0.1);
-  color: var(--gray-100);
+  color: var(--code-fg);
   font-size: var(--text-xs);
   font-weight: var(--text-weight-medium);
   cursor: pointer;
   transition: background 0.15s;
-  min-height: 32px;
+  min-height: 44px;
   backdrop-filter: blur(4px);
 }
 
@@ -156,7 +172,19 @@
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
   white-space: nowrap;
-  min-height: 36px;
+  min-height: 44px;
+}
+
+.export-panel__share-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.export-panel__share-btn:disabled,
+.export-panel__share-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .export-panel__share-btn:hover {

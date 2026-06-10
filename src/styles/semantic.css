@@ -10,8 +10,8 @@
 }
 
 .semantic-card__swatch {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   flex-shrink: 0;
@@ -46,6 +46,11 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
+}
+
+.semantic-card__action:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .semantic-card__action:hover {

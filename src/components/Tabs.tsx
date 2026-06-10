@@ -1,7 +1,5 @@
-import { atom } from 'nanostores'
 import { useStore } from '@nanostores/react'
-
-export const $activeTab = atom('palettes')
+import { $activeTab } from '../stores/tabs.store'
 
 const TABS = [
   { id: 'palettes', label: 'Paletas' },

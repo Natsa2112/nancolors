@@ -27,6 +27,13 @@
   transform: scale(0.98);
 }
 
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .btn:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -38,6 +45,10 @@
   border: 1px solid var(--color-border);
 }
 
+.btn--secondary:active {
+  background: var(--color-border);
+}
+
 .btn--ghost {
   background: transparent;
   color: var(--color-foreground);
@@ -45,6 +56,10 @@
 
 .btn--ghost:hover {
   background: var(--color-surface);
+}
+
+.btn--ghost:active {
+  background: var(--color-border);
 }
 
 .btn--sm {
@@ -112,9 +127,20 @@
   border-bottom-color: var(--color-primary);
 }
 
+.tab:active {
+  background: var(--color-surface);
+}
+
 .tab:focus-visible {
   outline: 2px solid var(--color-primary);
-  outline-offset: -2px;
+  outline-offset: 2px;
+}
+
+.tab:disabled,
+.tab[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* ========== INPUT ========== */
@@ -134,9 +160,9 @@
 }
 
 .input:focus {
-  outline: none;
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .input--mono {
@@ -165,7 +191,9 @@
   margin-bottom: var(--space-1);
 }
 
-.tooltip:hover .tooltip__content {
+.tooltip:hover .tooltip__content,
+.tooltip:focus-within .tooltip__content,
+.tooltip:focus .tooltip__content {
   opacity: 1;
 }
 

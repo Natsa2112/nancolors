@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useStore } from '@nanostores/react'
 import { $hex, $rgb, $hsl, $oklch } from '../../stores/color.store'
 import { $palettes } from '../../stores/palettes.store'
-import { $activeTab } from '../Tabs'
+import { $activeTab } from '../../stores/tabs.store'
 import { showToast } from '../../stores/toast.store'
 import { toCSSVariables, toTailwindConfig, toJSON, toSVG } from '../../lib/export.service'
 import { buildShareUrl } from '../../lib/share'
@@ -53,7 +53,7 @@ export default function ExportPanel({ tab }: Props) {
   }
 
   return (
-    <div className="export-panel" style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="export-panel" style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <div className="export-panel__card">
         <div className="export-panel__header">
           <h3 className="export-panel__title">Exportar paletas</h3>

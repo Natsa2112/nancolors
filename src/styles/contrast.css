@@ -33,7 +33,7 @@
 }
 
 .contrast-score__ratio {
-  font-size: var(--text-lg);
+  font-size: var(--text-h4);
   font-weight: var(--text-weight-bold);
   font-family: var(--font-mono);
   line-height: 1;
@@ -93,6 +93,21 @@
   font-size: var(--text-sm);
 }
 
+[data-theme="dark"] .contrast-warning--error {
+  background: #450a0a;
+  color: #fca5a5;
+}
+
+[data-theme="dark"] .contrast-warning--warning {
+  background: #431407;
+  color: #fdba74;
+}
+
+[data-theme="dark"] .contrast-warning--success {
+  background: #052e16;
+  color: #86efac;
+}
+
 .contrast-warning--error {
   background: #fef2f2;
   color: #991b1b;
@@ -131,12 +146,27 @@
   color: #166534;
 }
 
+[data-theme="dark"] .contrast-badge--aa {
+  background: #052e16;
+  color: #86efac;
+}
+
 .contrast-badge--aaa {
   background: #ecfdf5;
   color: #065f46;
 }
 
+[data-theme="dark"] .contrast-badge--aaa {
+  background: #022c22;
+  color: #6ee7b7;
+}
+
 .contrast-badge--fail {
   background: #fef2f2;
   color: #991b1b;
+}
+
+[data-theme="dark"] .contrast-badge--fail {
+  background: #450a0a;
+  color: #fca5a5;
 }

@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { $semantic } from '../../stores/semantic.store'
-import { $activeTab } from '../Tabs'
+import { $activeTab } from '../../stores/tabs.store'
 import { showToast } from '../../stores/toast.store'
 
 const ROLE_LABELS: Record<string, string> = {
@@ -39,7 +39,7 @@ export default function SemanticPanel({ tab }: Props) {
   }
 
   return (
-    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <div className="semantic-list">
         <div className="semantic-list__header">
           <span className="semantic-list__title">Roles semánticos</span>

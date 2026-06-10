@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { $contrast } from '../../stores/contrast.store'
-import { $activeTab } from '../Tabs'
+import { $activeTab } from '../../stores/tabs.store'
 
 function gaugeColor(ratio: number): string {
   if (ratio >= 7) return 'var(--color-success)'
@@ -51,7 +51,7 @@ export default function ContrastPanel({ tab }: Props) {
   const contrast = useStore($contrast)
 
   return (
-    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <div className="contrast-summary">
         <Badge label="AA Large" pass={contrast.aaLarge} />
         <Badge label="AA Normal" pass={contrast.aaNormal} />

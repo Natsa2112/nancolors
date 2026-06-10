@@ -1,6 +1,6 @@
 import { useStore } from '@nanostores/react'
 import { $palettes } from '../../stores/palettes.store'
-import { $activeTab } from '../Tabs'
+import { $activeTab } from '../../stores/tabs.store'
 import { showToast } from '../../stores/toast.store'
 import { HARMONY_TYPES } from '../../lib/constants'
 import type { HarmonyType } from '../../lib/types'
@@ -28,7 +28,7 @@ export default function PaletteGenerator({ tab }: Props) {
   }
 
   return (
-    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
       {HARMONY_TYPES.map((type) => {
         const colors = palettes[type]
         return (

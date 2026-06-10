@@ -112,9 +112,4 @@
 .gap-6 { gap: var(--space-6); }
 .gap-8 { gap: var(--space-8); }
 
-/* ========== CONTAINER QUERIES ========== */
-@container (min-width: 400px) {
-  .container-query-demo {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+
