@@ -98,7 +98,11 @@ export default function LivePreview({ tab }: Props) {
         <div className="preview__body">
           <PreviewNavbar previewDark={previewDark} onToggle={() => setPreviewDark(!previewDark)} />
           <PreviewHero />
+          <PreviewStats />
+          <PreviewCharts />
           <PreviewCards />
+          <PreviewTestimonials />
+          <PreviewFaq />
           <PreviewButtons />
           <PreviewForm />
           <PreviewFooter />
@@ -146,6 +150,266 @@ function PreviewHero() {
   )
 }
 
+function PreviewStats() {
+  return (
+    <div className="preview-stats">
+      <div className="preview-stat">
+        <span className="preview-stat__value">12K+</span>
+        <span className="preview-stat__label">Usuarios</span>
+      </div>
+      <div className="preview-stat">
+        <span className="preview-stat__value">99.9%</span>
+        <span className="preview-stat__label">Uptime</span>
+      </div>
+      <div className="preview-stat">
+        <span className="preview-stat__value">50+</span>
+        <span className="preview-stat__label">Países</span>
+      </div>
+      <div className="preview-stat">
+        <span className="preview-stat__value">4.9</span>
+        <span className="preview-stat__label">Valoración</span>
+      </div>
+    </div>
+  )
+}
+
+function PreviewCharts() {
+  const barRef = useRef<HTMLCanvasElement>(null)
+  const lineRef = useRef<HTMLCanvasElement>(null)
+  const pieRef = useRef<HTMLCanvasElement>(null)
+  const rafRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    let running = true
+
+    function getColor(varName: string, fallback: string): string {
+      if (typeof document === 'undefined') return fallback
+      const el = document.querySelector('.preview')
+      if (!el) return fallback
+      return getComputedStyle(el).getPropertyValue(varName).trim() || fallback
+    }
+
+    function drawBar() {
+      const canvas = barRef.current
+      if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      const w = canvas.width, h = canvas.height
+      ctx.clearRect(0, 0, w, h)
+      const text = getColor('--p-color-card-text', '#000')
+      const bar = getColor('--p-color-btn-bg', '#3b82f6')
+      const border = getColor('--p-color-card-border', '#e5e7eb')
+      const data = [35, 55, 40, 70, 60, 85]
+      const pad = 24, bw = (w - pad * 2) / data.length - 4
+      ctx.strokeStyle = border
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(pad, 10)
+      ctx.lineTo(pad, h - 20)
+      ctx.lineTo(w - 10, h - 20)
+      ctx.stroke()
+      data.forEach((v, i) => {
+        const x = pad + i * (bw + 4)
+        const bh = (v / 100) * (h - 40)
+        ctx.fillStyle = bar
+        ctx.beginPath()
+        ctx.roundRect(x, h - 20 - bh, bw, bh, [3, 3, 0, 0])
+        ctx.fill()
+        ctx.fillStyle = text
+        ctx.font = '9px sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillText(`${v}%`, x + bw / 2, h - 6)
+      })
+    }
+
+    function drawLine() {
+      const canvas = lineRef.current
+      if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      const w = canvas.width, h = canvas.height
+      ctx.clearRect(0, 0, w, h)
+      const line = getColor('--p-color-btn-bg', '#3b82f6')
+      const text = getColor('--p-color-card-text', '#000')
+      const border = getColor('--p-color-card-border', '#e5e7eb')
+      const data = [20, 35, 30, 55, 50, 75, 90]
+      const pad = 24
+      ctx.strokeStyle = border
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(pad, h - 20)
+      ctx.lineTo(w - 10, h - 20)
+      ctx.stroke()
+      const points = data.map((v, i) => ({
+        x: pad + (i / (data.length - 1)) * (w - pad - 10),
+        y: h - 20 - (v / 100) * (h - 40),
+      }))
+      ctx.beginPath()
+      ctx.moveTo(points[0].x, h - 20)
+      points.forEach(p => ctx.lineTo(p.x, p.y))
+      ctx.lineTo(points[points.length - 1].x, h - 20)
+      ctx.closePath()
+      const grad = ctx.createLinearGradient(0, 10, 0, h - 20)
+      grad.addColorStop(0, line + '40')
+      grad.addColorStop(1, line + '05')
+      ctx.fillStyle = grad
+      ctx.fill()
+      ctx.beginPath()
+      points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y))
+      ctx.strokeStyle = line
+      ctx.lineWidth = 2.5
+      ctx.lineJoin = 'round'
+      ctx.stroke()
+      points.forEach(p => {
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2)
+        ctx.fillStyle = '#fff'
+        ctx.fill()
+        ctx.strokeStyle = line
+        ctx.lineWidth = 2
+        ctx.stroke()
+      })
+      ctx.fillStyle = text
+      ctx.font = '9px sans-serif'
+      ctx.textAlign = 'center'
+      const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul']
+      points.forEach((p, i) => ctx.fillText(labels[i], p.x, h - 5))
+    }
+
+    function drawPie() {
+      const canvas = pieRef.current
+      if (!canvas) return
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+      const w = canvas.width, h = canvas.height
+      ctx.clearRect(0, 0, w, h)
+      const colors = [
+        getColor('--p-color-btn-bg', '#3b82f6'),
+        getColor('--p-color-hero-bg', '#8b5cf6'),
+        getColor('--p-color-card-border', '#e5e7eb'),
+        getColor('--p-color-text', '#6b7280'),
+      ]
+      const text = getColor('--p-color-card-text', '#000')
+      const data = [45, 25, 18, 12]
+      const cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 16
+      let start = -Math.PI / 2
+      data.forEach((v, i) => {
+        const angle = (v / 100) * Math.PI * 2
+        ctx.beginPath()
+        ctx.moveTo(cx, cy)
+        ctx.arc(cx, cy, r, start, start + angle)
+        ctx.closePath()
+        ctx.fillStyle = colors[i % colors.length]
+        ctx.fill()
+        const mid = start + angle / 2
+        const lx = cx + Math.cos(mid) * (r * 0.65)
+        const ly = cy + Math.sin(mid) * (r * 0.65)
+        ctx.fillStyle = '#fff'
+        ctx.font = 'bold 10px sans-serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(`${v}%`, lx, ly)
+        start += angle
+      })
+      ctx.beginPath()
+      ctx.arc(cx, cy, r * 0.45, 0, Math.PI * 2)
+      ctx.fillStyle = getColor('--p-color-card-bg', '#fff')
+      ctx.fill()
+    }
+
+    function loop() {
+      if (!running) return
+      drawBar()
+      drawLine()
+      drawPie()
+      rafRef.current = requestAnimationFrame(loop)
+    }
+
+    rafRef.current = requestAnimationFrame(loop)
+    return () => {
+      running = false
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current)
+        rafRef.current = null
+      }
+    }
+  }, [])
+
+  return (
+    <div className="preview-charts">
+      <div className="preview-chart">
+        <span className="preview-chart__title">Ingresos mensuales</span>
+        <canvas ref={barRef} width={160} height={120} className="preview-chart__canvas" />
+      </div>
+      <div className="preview-chart">
+        <span className="preview-chart__title">Crecimiento</span>
+        <canvas ref={lineRef} width={160} height={120} className="preview-chart__canvas" />
+      </div>
+      <div className="preview-chart">
+        <span className="preview-chart__title">Distribución</span>
+        <canvas ref={pieRef} width={160} height={120} className="preview-chart__canvas" />
+      </div>
+    </div>
+  )
+}
+
+function PreviewTestimonials() {
+  return (
+    <div className="preview-testimonials">
+      <blockquote className="preview-testimonial">
+        <p className="preview-testimonial__text">"Una herramienta increíble, transformó nuestra forma de trabajar."</p>
+        <div className="preview-testimonial__author">
+          <span className="preview-testimonial__avatar" aria-hidden="true">M</span>
+          <div>
+            <span className="preview-testimonial__name">María García</span>
+            <span className="preview-testimonial__role">CEO, TechCorp</span>
+          </div>
+        </div>
+      </blockquote>
+      <blockquote className="preview-testimonial">
+        <p className="preview-testimonial__text">"La mejor plataforma que hemos usado. Altamente recomendada."</p>
+        <div className="preview-testimonial__author">
+          <span className="preview-testimonial__avatar" aria-hidden="true">C</span>
+          <div>
+            <span className="preview-testimonial__name">Carlos Ruiz</span>
+            <span className="preview-testimonial__role">CTO, StartUpX</span>
+          </div>
+        </div>
+      </blockquote>
+    </div>
+  )
+}
+
+function PreviewFaq() {
+  const [open, setOpen] = useState<number | null>(null)
+  const items = [
+    { q: '¿Cómo funciona la plataforma?', a: 'Regístrate gratis y accede a todas las herramientas desde tu panel de control.' },
+    { q: '¿Hay periodo de prueba?', a: 'Sí, ofrecemos 14 días de prueba gratuita sin compromiso.' },
+    { q: '¿Puedo cancelar cuando quiera?', a: 'Sin problema. Cancela en cualquier momento desde tu cuenta.' },
+  ]
+  return (
+    <div className="preview-faq">
+      <h3 className="preview-faq__title">Preguntas frecuentes</h3>
+      {items.map((item, i) => (
+        <div key={i} className="preview-faq__item">
+          <button
+            className="preview-faq__question"
+            onClick={() => setOpen(open === i ? null : i)}
+            aria-expanded={open === i}
+          >
+            {item.q}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transform: open === i ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          {open === i && <p className="preview-faq__answer">{item.a}</p>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function PreviewCards() {
   return (
     <div className="preview-cards">
@@ -169,13 +433,28 @@ function PreviewButtons() {
 }
 
 function PreviewForm() {
+  const [sent, setSent] = useState(false)
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (sent) return
+    setSent(true)
+    setTimeout(() => setSent(false), 2000)
+  }
+
   return (
-    <form className="preview-form" onSubmit={(e) => e.preventDefault()}>
+    <form className="preview-form" onSubmit={handleSubmit}>
       <label className="preview-form__label" htmlFor="pv-email">Correo electrónico</label>
       <input className="preview-form__input" id="pv-email" type="email" placeholder="correo@ejemplo.com" />
       <label className="preview-form__label" htmlFor="pv-name">Nombre</label>
       <input className="preview-form__input" id="pv-name" type="text" placeholder="Tu nombre" />
-      <button className="preview-btn preview-btn--primary" type="submit">Enviar</button>
+      <button
+        className={`preview-btn ${sent ? 'preview-btn--sent' : 'preview-btn--primary'}`}
+        type="submit"
+        disabled={sent}
+      >
+        {sent ? 'Enviado' : 'Enviar'}
+      </button>
     </form>
   )
 }

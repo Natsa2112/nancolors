@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useStore } from '@nanostores/react'
 import { $hex, $rgb, $hsl, $oklch } from '../../stores/color.store'
 import { $palettes } from '../../stores/palettes.store'
+import { $previewPalette } from '../../stores/preview.store'
 import { $activeTab } from '../../stores/tabs.store'
 import { showToast } from '../../stores/toast.store'
 import { toCSSVariables, toTailwindConfig, toJSON, toSVG } from '../../lib/export.service'
 import { buildShareUrl } from '../../lib/share'
+import { darken } from '../../lib/color/manipulation'
 import type { ExportFormat } from '../../lib/types'
 
 const FORMATS: { id: ExportFormat; label: string }[] = [
@@ -26,19 +28,40 @@ export default function ExportPanel({ tab }: Props) {
   const hsl = useStore($hsl)
   const oklch = useStore($oklch)
   const palettes = useStore($palettes)
+  const activePalette = useStore($previewPalette)
   const [format, setFormat] = useState<ExportFormat>('css')
 
+  const filteredPalettes = useMemo(() => {
+    if (!activePalette) return {}
+    const colors = palettes[activePalette]
+    if (!colors) return {}
+    return { [activePalette]: colors }
+  }, [palettes, activePalette])
+
+  const darkPalettes = useMemo(() => {
+    const result: Record<string, string[]> = {}
+    for (const [type, colors] of Object.entries(filteredPalettes)) {
+      result[type] = colors.map((c) => darken(c, 70) ?? c)
+    }
+    return result
+  }, [filteredPalettes])
+
+  const themeLabel = activePalette
+    ? `Exportar ${activePalette}`
+    : 'Exportar paletas'
+
   function getCode(): string {
-    const p = palettes as unknown as Record<string, string[]>
+    const light = filteredPalettes as unknown as Record<string, string[]>
+    const dark = darkPalettes as unknown as Record<string, string[]>
     switch (format) {
       case 'css':
-        return toCSSVariables(hex, p)
+        return toCSSVariables(hex, light, dark)
       case 'tailwind':
-        return toTailwindConfig(hex, p)
+        return toTailwindConfig(hex, light, dark)
       case 'json':
-        return toJSON(hex, rgb, hsl, oklch, p)
+        return toJSON(hex, rgb, hsl, oklch, light, dark)
       case 'svg':
-        return toSVG(hex, p)
+        return toSVG(hex, light, dark)
     }
   }
 
@@ -56,7 +79,7 @@ export default function ExportPanel({ tab }: Props) {
     <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="export-panel" style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <div className="export-panel__card">
         <div className="export-panel__header">
-          <h3 className="export-panel__title">Exportar paletas</h3>
+          <h3 className="export-panel__title">{themeLabel}</h3>
           <div className="export-panel__formats" role="radiogroup" aria-label="Formato de exportación">
             {FORMATS.map((f) => (
               <button
