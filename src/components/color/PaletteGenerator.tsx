@@ -1,7 +1,7 @@
 import { useStore } from '@nanostores/react'
-import { $hex } from '../../stores/color.store'
 import { $palettes } from '../../stores/palettes.store'
 import { $activeTab } from '../Tabs'
+import { showToast } from '../../stores/toast.store'
 import { HARMONY_TYPES } from '../../lib/constants'
 import type { HarmonyType } from '../../lib/types'
 
@@ -14,23 +14,21 @@ const HARMONY_LABELS: Record<HarmonyType, string> = {
   tetradic: 'Tetrádica',
 }
 
-function copyHex(hex: string) {
-  navigator.clipboard.writeText(hex)
-}
-
 interface Props {
   tab: string
 }
 
 export default function PaletteGenerator({ tab }: Props) {
   const activeTab = useStore($activeTab)
-  if (activeTab !== tab) return null
-
-  const hex = useStore($hex)
   const palettes = useStore($palettes)
 
+  function copyHex(hex: string) {
+    navigator.clipboard.writeText(hex)
+    showToast(`Copiado ${hex}`)
+  }
+
   return (
-    <div>
+    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
       {HARMONY_TYPES.map((type) => {
         const colors = palettes[type]
         return (

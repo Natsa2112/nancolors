@@ -26,8 +26,6 @@ interface Props {
 
 export default function LivePreview({ tab }: Props) {
   const activeTab = useStore($activeTab)
-  if (activeTab !== tab) return null
-
   const hex = useStore($hex)
   const semantic = useStore($semantic)
   const contrast = useStore($contrast)
@@ -61,19 +59,21 @@ export default function LivePreview({ tab }: Props) {
   }, [])
 
   return (
-    <div className="preview" ref={containerRef}>
-      <div className="preview__toolbar">
-        <span className="preview__dot" />
-        <span className="preview__dot" />
-        <span className="preview__dot" />
-      </div>
-      <div className="preview__body">
-        <PreviewNavbar />
-        <PreviewHero />
-        <PreviewCards />
-        <PreviewButtons />
-        <PreviewForm />
-        <PreviewFooter />
+    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
+      <div className="preview" ref={containerRef}>
+        <div className="preview__toolbar">
+          <span className="preview__dot" />
+          <span className="preview__dot" />
+          <span className="preview__dot" />
+        </div>
+        <div className="preview__body">
+          <PreviewNavbar />
+          <PreviewHero />
+          <PreviewCards />
+          <PreviewButtons />
+          <PreviewForm />
+          <PreviewFooter />
+        </div>
       </div>
     </div>
   )

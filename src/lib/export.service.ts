@@ -52,11 +52,15 @@ export function toSVG(hex: string, palettes: Record<string, string[]>): string {
   const swatches = allColors
     .map(
       (color, i) =>
-        `<rect x="${i * 40}" y="0" width="40" height="40" fill="${color}" rx="4" />`
+        `  <rect x="${i * 40}" y="0" width="40" height="40" fill="${color}" rx="4" />`
     )
-    .join('')
+    .join('\n')
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${allColors.length * 40} 40" width="${allColors.length * 40}" height="40">
-  ${swatches}
-</svg>`
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg"`,
+    `     viewBox="0 0 ${allColors.length * 40} 40"`,
+    `     width="${allColors.length * 40}" height="40">`,
+    swatches,
+    `</svg>`,
+  ].join('\n')
 }

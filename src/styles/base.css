@@ -193,3 +193,28 @@ ul, ol {
 .skip-link:focus {
   top: var(--space-2);
 }
+
+/* ========== TOAST ========== */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.toast {
+  padding: var(--space-2) var(--space-4);
+  background: var(--gray-900);
+  color: var(--white);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: slideUpFade 0.2s ease;
+  pointer-events: auto;
+}

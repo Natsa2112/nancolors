@@ -48,12 +48,10 @@ interface Props {
 
 export default function ContrastPanel({ tab }: Props) {
   const activeTab = useStore($activeTab)
-  if (activeTab !== tab) return null
-
   const contrast = useStore($contrast)
 
   return (
-    <div>
+    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <div className="contrast-summary">
         <Badge label="AA Large" pass={contrast.aaLarge} />
         <Badge label="AA Normal" pass={contrast.aaNormal} />

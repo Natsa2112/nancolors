@@ -8,6 +8,7 @@ import ContrastPanel from '../components/color/ContrastPanel'
 import CvdPanel from '../components/color/CvdPanel'
 import ExportPanel from '../components/export/ExportPanel'
 import LivePreview from '../components/preview/LivePreview'
+import Toast from '../components/Toast'
 ---
 
 <ToolLayout title="Inicio">
@@ -51,4 +52,20 @@ import LivePreview from '../components/preview/LivePreview'
   <section slot="sidebar">
     <p class="text-sm text-muted">Selecciona un color y navega entre las herramientas.</p>
   </section>
+
+  <Toast slot="footer" client:idle />
 </ToolLayout>
+
+<script>
+import { setHex } from '../stores/color.store'
+import { decodePalette } from '../lib/share'
+
+const params = new URLSearchParams(location.search)
+const c = params.get('c')
+if (c) {
+  const decoded = decodePalette(c)
+  if (decoded) {
+    setHex(decoded)
+  }
+}
+</script>

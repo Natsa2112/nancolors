@@ -10,6 +10,10 @@ function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
   }
 }
 
+function handleNativePicker(e: React.ChangeEvent<HTMLInputElement>) {
+  setHex(e.target.value)
+}
+
 export default function ColorPicker() {
   const hex = useStore($hex)
   const error = useStore($error)
@@ -17,12 +21,16 @@ export default function ColorPicker() {
   return (
     <div className="color-picker">
       <div className="color-picker__preview">
-        <div
-          className="color-swatch color-swatch--lg"
-          style={{ backgroundColor: hex }}
-          role="img"
-          aria-label={`Color actual: ${hex}`}
-        />
+        <label className="color-swatch color-swatch--lg" style={{ backgroundColor: hex }} role="img" aria-label={`Color actual: ${hex}`}>
+          <input
+            type="color"
+            value={hex}
+            onChange={handleNativePicker}
+            className="sr-only"
+            tabIndex={-1}
+            aria-hidden="true"
+          />
+        </label>
         <div>
           <label className="sr-only" htmlFor="hex-input">Color en hexadecimal</label>
           <input

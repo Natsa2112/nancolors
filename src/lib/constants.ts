@@ -5,7 +5,7 @@ export const WCAG_THRESHOLDS = {
   AAA_NORMAL: 7,
 } as const
 
-export const DEFAULT_COLOR = '#FF6B35'
+export const DEFAULT_COLOR = '#ff6b35'
 
 export const DEFAULT_RGB = { r: 255, g: 107, b: 53 } as const
 export const DEFAULT_HSL = { h: 16, s: 100, l: 60 } as const

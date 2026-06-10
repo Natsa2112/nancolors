@@ -16,13 +16,11 @@ interface Props {
 
 export default function CvdPanel({ tab }: Props) {
   const activeTab = useStore($activeTab)
-  if (activeTab !== tab) return null
-
   const hex = useStore($hex)
   const simulated = simulateAll(hex)
 
   return (
-    <div>
+    <div style={{ display: activeTab !== tab ? 'none' : undefined }}>
       <h3 className="text-sm text-bold mt-4 mb-2">Simulación CVD</h3>
       <p className="text-xs text-muted mb-3">
         Brettel-Viénot-Mollon: protanopia, deuteranopia, tritanopia.
