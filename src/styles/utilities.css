@@ -1,0 +1,102 @@
+/* ========== VISIBILITY ========== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ========== TEXT ========== */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-sm {
+  font-size: var(--text-sm);
+}
+
+.text-xs {
+  font-size: var(--text-xs);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-bold {
+  font-weight: var(--text-weight-bold);
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+}
+
+/* ========== SPACING ========== */
+.mt-2 { margin-top: var(--space-2); }
+.mt-4 { margin-top: var(--space-4); }
+.mt-8 { margin-top: var(--space-8); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-8 { margin-bottom: var(--space-8); }
+.mx-auto { margin-inline: auto; }
+
+.p-2 { padding: var(--space-2); }
+.p-4 { padding: var(--space-4); }
+.p-6 { padding: var(--space-6); }
+
+/* ========== WIDTH ========== */
+.w-full {
+  width: 100%;
+}
+
+/* ========== BORDER ========== */
+.border {
+  border: 1px solid var(--color-border);
+}
+
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: var(--radius-full); }
+
+/* ========== INTERACTIVITY ========== */
+.clickable {
+  cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
+}
+
+/* ========== TRANSITIONS ========== */
+.transition {
+  transition: all 0.2s ease;
+}
+
+/* ========== OVERFLOW ========== */
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+/* ========== PRINT ========== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

@@ -9,6 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "astro": "astro"
   },
   "dependencies": {
@@ -23,6 +25,7 @@
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "vitest": "^4.1.8"
   }
 }

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nancolors.app/sitemap-index.xml

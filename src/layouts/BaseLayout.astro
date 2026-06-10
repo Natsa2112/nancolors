@@ -1,0 +1,64 @@
+---
+import '../styles/base.css'
+import '../styles/layout.css'
+import '../styles/utilities.css'
+
+export interface Props {
+  title: string
+  description?: string
+  ogImage?: string
+}
+
+const { title, description = 'NaN Colors — herramienta de color inteligente', ogImage } = Astro.props
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | NaN Colors</title>
+    <meta name="description" content={description} />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} | NaN Colors`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | NaN Colors`} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- Theme -->
+    <meta name="color-scheme" content="light" />
+
+    <!-- Viewport for mobile -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#3B82F6" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+
+    <slot name="header" />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+
+    <!-- Analytics slot (Plausible) -->
+    <slot name="analytics" />
+  </body>
+</html>
