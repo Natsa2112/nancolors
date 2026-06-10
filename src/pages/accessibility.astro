@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="Accesibilidad">
+  <article class="container section" style="max-width: 768px; margin-inline: auto;">
+    <h1>Accesibilidad y Contraste</h1>
+
+    <h2 class="mt-8">WCAG 2.1</h2>
+    <p class="mt-2">
+      Las <abbr title="Web Content Accessibility Guidelines">WCAG</abbr> definen niveles de contraste mínimos:
+    </p>
+
+    <ul class="mt-2">
+      <li><strong>AA (Normal):</strong> 4.5:1 — texto menor a 18px / 14px bold</li>
+      <li><strong>AA (Grande):</strong> 3:1 — texto mayor o igual a 18px / 14px bold</li>
+      <li><strong>AAA (Normal):</strong> 7:1 — contraste mejorado</li>
+      <li><strong>AAA (Grande):</strong> 4.5:1 — contraste mejorado para textos grandes</li>
+    </ul>
+
+    <h2 class="mt-8">Cómo usar la herramienta</h2>
+    <ol class="mt-2">
+      <li>Selecciona un color base con el selector</li>
+      <li>Ve a la pestaña "Accesibilidad"</li>
+      <li>Revisa los scores de cada par (texto/fondo)</li>
+      <li>Ajusta el color hasta cumplir el nivel deseado</li>
+    </ol>
+  </article>
+</BaseLayout>
