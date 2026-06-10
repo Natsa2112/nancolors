@@ -1,6 +1,7 @@
 ---
 import ToolLayout from '../layouts/ToolLayout.astro'
 import ColorPicker from '../components/color/ColorPicker'
+import LivePreview from '../components/preview/LivePreview'
 ---
 
 <ToolLayout title="Inicio">
@@ -10,6 +11,10 @@ import ColorPicker from '../components/color/ColorPicker'
 
     <div class="mt-8">
       <ColorPicker client:idle />
+    </div>
+
+    <div class="mt-8">
+      <LivePreview client:idle />
     </div>
   </section>
 
