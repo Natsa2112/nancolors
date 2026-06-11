@@ -229,7 +229,7 @@ function PreviewCharts() {
       const w = canvas.width,
         h = canvas.height
       ctx.clearRect(0, 0, w, h)
-      const _text = getColor('--p-color-card-text', '#000')
+      const text = getColor('--p-color-card-text', '#000')
       const bar = getColor('--p-color-btn-bg', '#3b82f6')
       const border = getColor('--p-color-card-border', '#e5e7eb')
       const data = [35, 55, 40, 70, 60, 85]
@@ -250,7 +250,7 @@ function PreviewCharts() {
         ctx.roundRect(x, h - 20 - bh, bw, bh, [3, 3, 0, 0])
         ctx.fill()
         ctx.fillStyle = text
-        ctx.font = '9px sans-serif'
+        ctx.font = '11px Inter, system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillText(`${v}%`, x + bw / 2, h - 6)
       })
@@ -265,7 +265,7 @@ function PreviewCharts() {
         h = canvas.height
       ctx.clearRect(0, 0, w, h)
       const line = getColor('--p-color-btn-bg', '#3b82f6')
-      const _text = getColor('--p-color-card-text', '#000')
+      const text = getColor('--p-color-card-text', '#000')
       const border = getColor('--p-color-card-border', '#e5e7eb')
       const data = [20, 35, 30, 55, 50, 75, 90]
       const pad = 24
@@ -305,7 +305,7 @@ function PreviewCharts() {
         ctx.stroke()
       })
       ctx.fillStyle = text
-      ctx.font = '9px sans-serif'
+      ctx.font = '11px Inter, system-ui, sans-serif'
       ctx.textAlign = 'center'
       const labels = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul']
       points.forEach((p, i) => ctx.fillText(labels[i], p.x, h - 5))
@@ -325,7 +325,6 @@ function PreviewCharts() {
         getColor('--p-color-card-border', '#e5e7eb'),
         getColor('--p-color-text', '#6b7280'),
       ]
-      const _text = getColor('--p-color-card-text', '#000')
       const data = [45, 25, 18, 12]
       const cx = w / 2,
         cy = h / 2,
@@ -343,7 +342,7 @@ function PreviewCharts() {
         const lx = cx + Math.cos(mid) * (r * 0.65)
         const ly = cy + Math.sin(mid) * (r * 0.65)
         ctx.fillStyle = '#fff'
-        ctx.font = 'bold 10px sans-serif'
+        ctx.font = '600 10px Inter, system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(`${v}%`, lx, ly)
