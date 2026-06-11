@@ -47,7 +47,9 @@
   font-weight: var(--text-weight-medium);
   text-decoration: none;
   border-radius: var(--radius-md);
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -64,7 +66,7 @@
   outline-offset: 2px;
 }
 
-.nav-link[aria-current="page"] {
+.nav-link[aria-current='page'] {
   color: var(--color-primary);
 }
 
@@ -81,7 +83,9 @@
   background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
   margin-left: var(--space-2);
 }
 
@@ -105,25 +109,27 @@
 .theme-toggle__icon--sun,
 .theme-toggle__icon--moon {
   position: absolute;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
-[data-theme="light"] .theme-toggle__icon--moon {
+[data-theme='light'] .theme-toggle__icon--moon {
   opacity: 1;
   transform: rotate(0deg);
 }
 
-[data-theme="light"] .theme-toggle__icon--sun {
+[data-theme='light'] .theme-toggle__icon--sun {
   opacity: 0;
   transform: rotate(90deg);
 }
 
-[data-theme="dark"] .theme-toggle__icon--sun {
+[data-theme='dark'] .theme-toggle__icon--sun {
   opacity: 1;
   transform: rotate(0deg);
 }
 
-[data-theme="dark"] .theme-toggle__icon--moon {
+[data-theme='dark'] .theme-toggle__icon--moon {
   opacity: 0;
   transform: rotate(90deg);
 }

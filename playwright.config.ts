@@ -9,7 +9,7 @@ export default defineConfig({
     headless: true,
   },
   webServer: {
-    command: 'pnpm astro build && pnpm astro preview',
+    command: 'pnpm astro dev',
     port: 4321,
     timeout: 30000,
   },

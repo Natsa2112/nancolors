@@ -51,7 +51,12 @@ export default function ContrastPanel({ tab }: Props) {
   const contrast = useStore($contrast)
 
   return (
-    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div
+      id={`panel-${tab}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${tab}`}
+      style={{ display: activeTab !== tab ? 'none' : undefined }}
+    >
       <div className="contrast-summary">
         <Badge label="AA Large" pass={contrast.aaLarge} />
         <Badge label="AA Normal" pass={contrast.aaNormal} />

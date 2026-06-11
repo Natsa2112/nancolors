@@ -41,12 +41,14 @@
 
 .color-picker__swatch {
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .color-picker__swatch:hover {
   transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .color-picker__swatch:focus-visible {
@@ -131,12 +133,14 @@
   cursor: pointer;
   min-height: 44px;
   background: var(--card-bg);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .preview-palette-bar__swatch:hover {
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .preview-palette-bar__swatch:focus-visible {
@@ -175,7 +179,7 @@
   background: var(--card-bg);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .color-picker-popover__canvas {
@@ -245,5 +249,3 @@
   padding: 0;
   min-height: 36px;
 }
-
-

@@ -1,5 +1,5 @@
 /* ========== DARK MODE ========== */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --color-background: #121212;
   --color-foreground: #e0e0e0;
   --color-surface: #1e1e1e;

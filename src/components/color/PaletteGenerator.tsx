@@ -36,7 +36,12 @@ export default function PaletteGenerator({ tab }: Props) {
   }
 
   return (
-    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div
+      id={`panel-${tab}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${tab}`}
+      style={{ display: activeTab !== tab ? 'none' : undefined }}
+    >
       {HARMONY_TYPES.map((type) => {
         const colors = palettes[type]
         const isActive = activePalette === type
@@ -99,12 +104,7 @@ function CustomPalette() {
       <div className="palette-grid-row">
         <div className="palette-grid">
           {colors.map((color, i) => (
-            <CustomSwatch
-              key={i}
-              index={i}
-              color={color}
-              onChange={handleColorChange}
-            />
+            <CustomSwatch key={i} index={i} color={color} onChange={handleColorChange} />
           ))}
         </div>
         <div className="palette-card__actions">
@@ -115,7 +115,15 @@ function CustomPalette() {
   )
 }
 
-function CustomSwatch({ index, color, onChange }: { index: number; color: string; onChange: (i: number, v: string) => void }) {
+function CustomSwatch({
+  index,
+  color,
+  onChange,
+}: {
+  index: number
+  color: string
+  onChange: (i: number, v: string) => void
+}) {
   const [open, setOpen] = useState(false)
   const swatchRef = useRef<HTMLDivElement>(null)
   const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null)

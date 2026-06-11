@@ -37,7 +37,7 @@ export function meetsAaaNormal(ratio: number): boolean {
 export function scoreContrast(
   label: string,
   foreground: string,
-  background: string
+  background: string,
 ): ContrastScore | null {
   const fgLum = relativeLuminance(foreground)
   const bgLum = relativeLuminance(background)

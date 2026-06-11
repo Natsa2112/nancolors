@@ -12,7 +12,9 @@
   font-size: var(--text-sm);
   font-weight: var(--text-weight-semibold);
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
+  transition:
+    opacity 0.2s,
+    transform 0.1s;
   text-decoration: none;
   white-space: nowrap;
   min-height: 44px;
@@ -87,7 +89,9 @@
 
 .card--interactive {
   cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .card--interactive:hover {
@@ -114,7 +118,9 @@
   cursor: pointer;
   white-space: nowrap;
   border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
   min-height: 44px;
 }
 
@@ -122,7 +128,7 @@
   color: var(--color-foreground);
 }
 
-.tab[aria-selected="true"] {
+.tab[aria-selected='true'] {
   color: var(--color-primary);
   border-bottom-color: var(--color-primary);
 }

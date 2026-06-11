@@ -75,9 +75,13 @@ export default function ColorPicker() {
           onKeyDown={handleSwatchKey}
         />
         <div>
-          <label className="sr-only" htmlFor="hex-input">Color en hexadecimal</label>
+          <label className="sr-only" htmlFor="hex-input">
+            Color en hexadecimal
+          </label>
           <div className="color-picker__hex-wrapper">
-            <span className="color-picker__hex-prefix" aria-hidden="true">#</span>
+            <span className="color-picker__hex-prefix" aria-hidden="true">
+              #
+            </span>
             <input
               id="hex-input"
               type="text"

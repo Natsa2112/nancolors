@@ -19,12 +19,12 @@ function hslToString(h: number, s: number, l: number): string {
 
 function hsvToHsl(h: number, sv: number, v: number): { h: number; s: number; l: number } {
   const l = v * (1 - sv / 2)
-  const s = (l === 0 || l === 1) ? 0 : (v - l) / Math.min(l, 1 - l)
+  const s = l === 0 || l === 1 ? 0 : (v - l) / Math.min(l, 1 - l)
   return { h, s: Math.round(s * 100), l: Math.round(l * 100) }
 }
 
 function hslToHsv(h: number, s: number, l: number): { sv: number; v: number } {
-  const v = l + s * Math.min(l, 100 - l) / 100
+  const v = l + (s * Math.min(l, 100 - l)) / 100
   const sv = v === 0 ? 0 : 2 * (1 - l / v)
   return { sv: Math.min(sv, 1), v: v / 100 }
 }
@@ -63,20 +63,24 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
     }
   }, [onClose])
 
-  const update = useCallback((h: number, s: number, l: number) => {
-    const newHsl = { h, s, l }
-    setHsl(newHsl)
-    const rgb2 = hslToRgb(newHsl)
-    const hex2 = rgbToHex(rgb2)
-    onChange(hex2)
-  }, [onChange])
+  const update = useCallback(
+    (h: number, s: number, l: number) => {
+      const newHsl = { h, s, l }
+      setHsl(newHsl)
+      const rgb2 = hslToRgb(newHsl)
+      const hex2 = rgbToHex(rgb2)
+      onChange(hex2)
+    },
+    [onChange],
+  )
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const w = canvas.width, h = canvas.height
+    const w = canvas.width,
+      h = canvas.height
 
     ctx.fillStyle = hslToString(hsl.h, 100, 50)
     ctx.fillRect(0, 0, w, h)
@@ -94,7 +98,8 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
     ctx.fillRect(0, 0, w, h)
 
     const { sv, v } = hslToHsv(hsl.h, hsl.s, hsl.l)
-    const ix = sv * w, iy = (1 - v) * h
+    const ix = sv * w,
+      iy = (1 - v) * h
     ctx.beginPath()
     ctx.arc(ix, iy, 5, 0, Math.PI * 2)
     ctx.strokeStyle = '#fff'
@@ -112,7 +117,8 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const w = canvas.width, h = canvas.height
+    const w = canvas.width,
+      h = canvas.height
     const grad = ctx.createLinearGradient(0, 0, w, 0)
     grad.addColorStop(0, '#f00')
     grad.addColorStop(0.17, '#ff0')
@@ -138,7 +144,10 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
     ctx.stroke()
   }, [hsl])
 
-  useEffect(() => { drawCanvas(); drawSlider() }, [drawCanvas, drawSlider])
+  useEffect(() => {
+    drawCanvas()
+    drawSlider()
+  }, [drawCanvas, drawSlider])
 
   function onCanvasDown(e: React.MouseEvent) {
     isDragging.current = true
@@ -176,7 +185,10 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
   }
 
   useEffect(() => {
-    const up = () => { isDragging.current = false; isDraggingSlider.current = false }
+    const up = () => {
+      isDragging.current = false
+      isDraggingSlider.current = false
+    }
     window.addEventListener('mouseup', up)
     return () => window.removeEventListener('mouseup', up)
   }, [])
@@ -210,11 +222,7 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
     : { top: 0, left: 0 }
 
   return (
-    <div
-      ref={popoverRef}
-      className="color-picker-popover"
-      style={{ top: pos.top, left: pos.left }}
-    >
+    <div ref={popoverRef} className="color-picker-popover" style={{ top: pos.top, left: pos.left }}>
       <canvas
         ref={canvasRef}
         width={CANVAS_SIZE}
@@ -222,7 +230,9 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
         className="color-picker-popover__canvas"
         onMouseDown={onCanvasDown}
         onMouseMove={onCanvasMove}
-        onMouseUp={() => { isDragging.current = false }}
+        onMouseUp={() => {
+          isDragging.current = false
+        }}
       />
       <canvas
         ref={sliderRef}
@@ -231,7 +241,9 @@ export default function ColorPickerPopover({ color, onChange, onClose, triggerRe
         className="color-picker-popover__slider"
         onMouseDown={onSliderDown}
         onMouseMove={onSliderMove}
-        onMouseUp={() => { isDraggingSlider.current = false }}
+        onMouseUp={() => {
+          isDraggingSlider.current = false
+        }}
       />
       <div className="color-picker-popover__footer">
         <div className="color-picker-popover__preview" style={{ backgroundColor: color }} />

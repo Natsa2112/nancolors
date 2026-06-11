@@ -17,7 +17,7 @@ const { title, description = 'NaN Colors — herramienta de color inteligente', 
   <head>
     <script is:inline>
       (function() {
-        var t = localStorage.getItem('nan-theme');
+        const t = localStorage.getItem('nan-theme');
         if (t === 'light' || t === 'dark') {
           document.documentElement.setAttribute('data-theme', t);
         } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {

@@ -19,10 +19,18 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 const ROLE_ORDER = [
-  'background', 'surface', 'card',
-  'text', 'link',
-  'secondary', 'tertiary', 'button', 'buttonHover',
-  'success', 'warning', 'error',
+  'background',
+  'surface',
+  'card',
+  'text',
+  'link',
+  'secondary',
+  'tertiary',
+  'button',
+  'buttonHover',
+  'success',
+  'warning',
+  'error',
 ]
 
 interface Props {
@@ -39,7 +47,12 @@ export default function SemanticPanel({ tab }: Props) {
   }
 
   return (
-    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div
+      id={`panel-${tab}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${tab}`}
+      style={{ display: activeTab !== tab ? 'none' : undefined }}
+    >
       <div className="semantic-list">
         <div className="semantic-list__header">
           <span className="semantic-list__title">Roles semánticos</span>
@@ -53,11 +66,15 @@ export default function SemanticPanel({ tab }: Props) {
               />
               <div className="semantic-card__info">
                 <div className="semantic-card__label">{ROLE_LABELS[role] || role}</div>
-                <div className="semantic-card__value">{semantic[role as keyof typeof semantic]}</div>
+                <div className="semantic-card__value">
+                  {semantic[role as keyof typeof semantic]}
+                </div>
               </div>
               <button
                 className="semantic-card__action"
-                onClick={() => copyHex(semantic[role as keyof typeof semantic], ROLE_LABELS[role] || role)}
+                onClick={() =>
+                  copyHex(semantic[role as keyof typeof semantic], ROLE_LABELS[role] || role)
+                }
                 aria-label={`Copiar ${ROLE_LABELS[role] || role}`}
               >
                 Copiar

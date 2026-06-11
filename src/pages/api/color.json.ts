@@ -1,3 +1,5 @@
+export const prerender = false
+
 import type { APIRoute } from 'astro'
 import { hexToRgb, hexToHsl, hexToOklch, isValidHex } from '../../lib/color/convert'
 import { relativeLuminance } from '../../lib/color/luminance'
@@ -6,10 +8,13 @@ export const GET: APIRoute = ({ url }) => {
   const hexParam = url.searchParams.get('hex')
 
   if (!hexParam || !isValidHex(`#${hexParam.replace(/^#/, '')}`)) {
-    return new Response(JSON.stringify({ error: 'Parámetro "hex" inválido. Usa formato HEX (ej: ?hex=ff6b35)' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return new Response(
+      JSON.stringify({ error: 'Parámetro "hex" inválido. Usa formato HEX (ej: ?hex=ff6b35)' }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
   }
 
   const hex = `#${hexParam.replace(/^#/, '').toLowerCase()}`
@@ -39,6 +44,6 @@ export const GET: APIRoute = ({ url }) => {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
       },
-    }
+    },
   )
 }

@@ -20,7 +20,12 @@ export default function CvdPanel({ tab }: Props) {
   const simulated = simulateAll(hex)
 
   return (
-    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div
+      id={`panel-${tab}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${tab}`}
+      style={{ display: activeTab !== tab ? 'none' : undefined }}
+    >
       <h3 className="text-sm text-bold mt-4 mb-2">Simulación CVD</h3>
       <p className="text-xs text-muted mb-3">
         Brettel-Viénot-Mollon: protanopia, deuteranopia, tritanopia.
@@ -30,7 +35,7 @@ export default function CvdPanel({ tab }: Props) {
           <div key={type} className="semantic-card">
             <div
               className="semantic-card__swatch"
-              style={{ backgroundColor: type === 'normal' ? hex : simulated[type] ?? '#000' }}
+              style={{ backgroundColor: type === 'normal' ? hex : (simulated[type] ?? '#000') }}
             />
             <div className="semantic-card__info">
               <div className="semantic-card__label">{CVD_LABELS[type]}</div>

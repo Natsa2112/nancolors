@@ -15,29 +15,29 @@ test.describe('Home page', () => {
   test('color picker renders', async ({ page }) => {
     await page.goto('/')
     await expect(page.locator('#hex-input')).toBeVisible()
-    await expect(page.locator('#hex-input')).toHaveValue('#ff6b35')
+    await expect(page.locator('#hex-input')).toHaveValue('ff6b35')
   })
 
   test('changes color on hex input', async ({ page }) => {
     await page.goto('/')
     const input = page.locator('#hex-input')
-    await input.fill('#000000')
-    await expect(input).toHaveValue('#000000')
+    await input.fill('000000')
+    await expect(input).toHaveValue('000000')
   })
 })
 
 test.describe('Static pages', () => {
   const pages = [
-    { path: '/about', title: 'Acerca' },
-    { path: '/accessibility', title: 'Accesibilidad' },
-    { path: '/terms', title: 'Términos' },
-    { path: '/privacy', title: 'Privacidad' },
+    { path: '/about', title: 'Acerca de NaN Colors' },
+    { path: '/accessibility', title: 'Accesibilidad y Contraste' },
+    { path: '/terms', title: 'Términos de Uso' },
+    { path: '/privacy', title: 'Política de Privacidad' },
   ]
 
   for (const { path, title } of pages) {
     test(`loads ${path}`, async ({ page }) => {
       await page.goto(path)
-      await expect(page.locator('h1')).toContainText(title)
+      await expect(page.getByRole('heading', { level: 1 })).toContainText(title)
     })
   }
 })
@@ -55,6 +55,6 @@ test.describe('404', () => {
   test('shows 404 page', async ({ page }) => {
     const response = await page.goto('/nonexistent')
     expect(response?.status()).toBe(404)
-    await expect(page.locator('h1')).toContainText('404')
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('404')
   })
 })

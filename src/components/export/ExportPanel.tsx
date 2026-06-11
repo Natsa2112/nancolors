@@ -46,9 +46,7 @@ export default function ExportPanel({ tab }: Props) {
     return result
   }, [filteredPalettes])
 
-  const themeLabel = activePalette
-    ? `Exportar ${activePalette}`
-    : 'Exportar paletas'
+  const themeLabel = activePalette ? `Exportar ${activePalette}` : 'Exportar paletas'
 
   function getCode(): string {
     const light = filteredPalettes as unknown as Record<string, string[]>
@@ -76,11 +74,21 @@ export default function ExportPanel({ tab }: Props) {
   }
 
   return (
-    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} className="export-panel" style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div
+      id={`panel-${tab}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${tab}`}
+      className="export-panel"
+      style={{ display: activeTab !== tab ? 'none' : undefined }}
+    >
       <div className="export-panel__card">
         <div className="export-panel__header">
           <h3 className="export-panel__title">{themeLabel}</h3>
-          <div className="export-panel__formats" role="radiogroup" aria-label="Formato de exportación">
+          <div
+            className="export-panel__formats"
+            role="radiogroup"
+            aria-label="Formato de exportación"
+          >
             {FORMATS.map((f) => (
               <button
                 key={f.id}
@@ -101,8 +109,16 @@ export default function ExportPanel({ tab }: Props) {
           </pre>
           <button className="export-panel__copy-btn" onClick={copyCode} title="Copiar código">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <rect x="3" y="3" width="10" height="10" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M12 2H5a1 1 0 00-1 1v1" stroke="currentColor" strokeWidth="1.5"/>
+              <rect
+                x="3"
+                y="3"
+                width="10"
+                height="10"
+                rx="1"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              <path d="M12 2H5a1 1 0 00-1 1v1" stroke="currentColor" strokeWidth="1.5" />
             </svg>
             Copiar
           </button>
@@ -114,8 +130,16 @@ export default function ExportPanel({ tab }: Props) {
             <code className="export-panel__share-url">{buildShareUrl(hex)}</code>
             <button className="export-panel__share-btn" onClick={copyShareUrl} title="Copiar URL">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <rect x="3" y="3" width="10" height="10" rx="1" stroke="currentColor" strokeWidth="1.5"/>
-                <path d="M12 2H5a1 1 0 00-1 1v1" stroke="currentColor" strokeWidth="1.5"/>
+                <rect
+                  x="3"
+                  y="3"
+                  width="10"
+                  height="10"
+                  rx="1"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path d="M12 2H5a1 1 0 00-1 1v1" stroke="currentColor" strokeWidth="1.5" />
               </svg>
               Copiar URL
             </button>

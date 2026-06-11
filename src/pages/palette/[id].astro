@@ -1,0 +1,122 @@
+---
+export const prerender = false
+
+import ToolLayout from '../../layouts/ToolLayout.astro'
+import { decodePalette } from '../../lib/share'
+import { hexToRgb, hexToHsl, hexToOklch, isValidHex } from '../../lib/color/convert'
+import { relativeLuminance } from '../../lib/color/luminance'
+import { generateHarmony } from '../../lib/color/harmonies'
+import type { HarmonyType } from '../../lib/types'
+
+const { id } = Astro.params
+
+if (!id || typeof id !== 'string') {
+  return Astro.redirect('/404')
+}
+
+const hex = decodePalette(id)
+
+if (!hex || !isValidHex(hex)) {
+  return Astro.redirect('/404')
+}
+
+const rgb = hexToRgb(hex)
+const hsl = hexToHsl(hex)
+const oklch = hexToOklch(hex)
+const luminance = relativeLuminance(hex)
+
+const harmonyTypes: HarmonyType[] = [
+  'complementary',
+  'analogous',
+  'triadic',
+  'monochromatic',
+  'splitComplementary',
+  'tetradic',
+]
+
+const palettes = harmonyTypes.map((type) => ({
+  type,
+  label: type.charAt(0).toUpperCase() + type.slice(1).replace(/([A-Z])/g, ' $1'),
+  colors: generateHarmony(hex, type).filter((c): c is string => c !== null),
+}))
+
+const toolUrl = `/?c=${id}`
+
+const ogTitle = `Paleta: ${hex} — NaN Colors`
+const ogDescription = `Paleta de color generada con ${hex}. Explora armonías, evalúa contraste WCAG y previsualiza en componentes reales.`
+---
+
+<ToolLayout title={ogTitle} description={ogDescription}>
+  <Fragment slot="head">
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
+  </Fragment>
+
+  <section slot="tool">
+    <nav class="breadcrumb" aria-label="Migas de pan">
+      <a href="/" class="breadcrumb__link">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <span class="breadcrumb__current" aria-current="page">Paleta compartida</span>
+    </nav>
+
+    <h1>Paleta Compartida</h1>
+    <p class="text-muted mt-2">Color base: <strong>{hex}</strong></p>
+
+    <div class="palette-shared__swatch" style={`background-color: ${hex};`} aria-label={`Color base: ${hex}`}>
+      <span class="palette-shared__hex">{hex}</span>
+      {rgb && <span class="palette-shared__info">RGB({rgb.r}, {rgb.g}, {rgb.b})</span>}
+      {hsl && <span class="palette-shared__info">HSL({Math.round(hsl.h)}, {Math.round(hsl.s)}%, {Math.round(hsl.l)}%)</span>}
+      {luminance !== null && <span class="palette-shared__info">Luminancia: {(luminance * 100).toFixed(1)}%</span>}
+    </div>
+
+    <h2 class="mt-8">Armonías</h2>
+    <div class="palette-shared__grid">
+      {palettes.map(({ label, colors }) => (
+        <div class="palette-shared__card">
+          <h3 class="palette-shared__card-title">{label}</h3>
+          <div class="palette-shared__colors">
+            {colors.map((color) => (
+              <div class="palette-shared__color" style={`background-color: ${color};`} title={color}>
+                <span class="palette-shared__color-hex">{color}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="palette-shared__cta mt-8">
+      <a href={toolUrl} class="btn btn--primary">
+        Abrir en NaN Colors
+      </a>
+      <p class="text-muted text-sm mt-2">Abre la herramienta con este color preseleccionado</p>
+    </div>
+  </section>
+
+  <section slot="sidebar">
+    <div class="palette-shared__sidebar-card">
+      <h3 class="text-sm">Información del color</h3>
+      <dl class="mt-2">
+        <dt class="text-xs text-muted">HEX</dt>
+        <dd>{hex}</dd>
+        {rgb && <>
+          <dt class="text-xs text-muted">RGB</dt>
+          <dd>{rgb.r}, {rgb.g}, {rgb.b}</dd>
+        </>}
+        {hsl && <>
+          <dt class="text-xs text-muted">HSL</dt>
+          <dd>{Math.round(hsl.h)}, {Math.round(hsl.s)}%, {Math.round(hsl.l)}%</dd>
+        </>}
+        {oklch && <>
+          <dt class="text-xs text-muted">OKLCH</dt>
+          <dd>{oklch.l.toFixed(3)}, {oklch.c.toFixed(3)}, {Math.round(oklch.h)}</dd>
+        </>}
+      </dl>
+    </div>
+  </section>
+</ToolLayout>

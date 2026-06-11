@@ -16,7 +16,7 @@ const LABELS: Record<HarmonyType, string> = {
 export default function PreviewPaletteBar() {
   const activePalette = useStore($previewPalette)
   const palettes = useStore($palettes)
-  const colors = activePalette ? palettes[activePalette] ?? [] : []
+  const colors = activePalette ? (palettes[activePalette] ?? []) : []
 
   if (!activePalette || colors.length === 0) return null
 
@@ -37,7 +37,10 @@ export default function PreviewPaletteBar() {
             title={`Copiar ${color}`}
             aria-label={`Copiar ${color}`}
           >
-            <span className="preview-palette-bar__swatch-color" style={{ backgroundColor: color }} />
+            <span
+              className="preview-palette-bar__swatch-color"
+              style={{ backgroundColor: color }}
+            />
             <span className="preview-palette-bar__hex">{color}</span>
           </button>
         ))}

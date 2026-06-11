@@ -1,10 +1,10 @@
 import type { SemanticRoles } from '../types'
-import { hexToHsl, hslToHex, hexToRgb, rgbToHex } from './convert'
+import { hexToHsl, hslToHex } from './convert'
 
 function shiftHue(hex: string, degrees: number, satDelta = 0, lightDelta = 0): string | null {
   const hsl = hexToHsl(hex)
   if (!hsl) return null
-  hsl.h = ((hsl.h + degrees) % 360 + 360) % 360
+  hsl.h = (((hsl.h + degrees) % 360) + 360) % 360
   hsl.s = Math.max(0, Math.min(100, hsl.s + satDelta))
   hsl.l = Math.max(0, Math.min(100, hsl.l + lightDelta))
   return hslToHex(hsl)
@@ -47,7 +47,7 @@ export function generateSemantic(hex: string): SemanticRoles | null {
   })
 
   const link: string = isColorful
-    ? shiftHue(hex, 200, 10, -5) ?? hex
+    ? (shiftHue(hex, 200, 10, -5) ?? hex)
     : hslToHex({ h: 210, s: 80, l: 50 })
 
   const success: string = '#22C55E'

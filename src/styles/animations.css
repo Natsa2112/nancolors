@@ -1,7 +1,11 @@
 /* ========== FADE IN ========== */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ========== SLIDE UP + FADE ========== */
@@ -22,20 +26,42 @@
   animation: slideUpFade 0.3s ease forwards;
 }
 
-.stagger > *:nth-child(1) { animation-delay: 0ms; }
-.stagger > *:nth-child(2) { animation-delay: 50ms; }
-.stagger > *:nth-child(3) { animation-delay: 100ms; }
-.stagger > *:nth-child(4) { animation-delay: 150ms; }
-.stagger > *:nth-child(5) { animation-delay: 200ms; }
-.stagger > *:nth-child(6) { animation-delay: 250ms; }
-.stagger > *:nth-child(7) { animation-delay: 300ms; }
-.stagger > *:nth-child(8) { animation-delay: 350ms; }
+.stagger > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.stagger > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.stagger > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+.stagger > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+.stagger > *:nth-child(6) {
+  animation-delay: 250ms;
+}
+.stagger > *:nth-child(7) {
+  animation-delay: 300ms;
+}
+.stagger > *:nth-child(8) {
+  animation-delay: 350ms;
+}
 
 /* ========== SPRING (simulated with cubic-bezier) ========== */
 @keyframes springIn {
-  0% { transform: scale(0.8); }
-  60% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .spring-in {
@@ -44,13 +70,19 @@
 
 /* ========== COUNTER ========== */
 @keyframes countUp {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ========== SPINNER ========== */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {
@@ -59,8 +91,13 @@
 
 /* ========== PULSE ========== */
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .pulse {

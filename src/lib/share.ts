@@ -1,4 +1,4 @@
-// @ts-ignore – lz-string is CJS, handled by vite.ssr.noExternal
+// @ts-expect-error – lz-string is CJS, handled by vite.ssr.noExternal
 import lzString from 'lz-string'
 
 export function encodePalette(hex: string): string {

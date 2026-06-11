@@ -1,5 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { lighten, darken, saturate, desaturate, adjustHue, mix } from '../../../lib/color/manipulation'
+import {
+  lighten,
+  darken,
+  saturate,
+  desaturate,
+  adjustHue,
+  mix,
+} from '../../../lib/color/manipulation'
 
 describe('lighten', () => {
   it('lightens a color', () => {

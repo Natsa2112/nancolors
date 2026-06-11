@@ -33,13 +33,7 @@ export function triadic(hex: string): (string | null)[] {
 }
 
 export function monochromatic(hex: string): (string | null)[] {
-  return [
-    darken(hex, 40),
-    darken(hex, 20),
-    hex,
-    lighten(hex, 20),
-    lighten(hex, 40),
-  ]
+  return [darken(hex, 40), darken(hex, 20), hex, lighten(hex, 20), lighten(hex, 40)]
 }
 
 export function splitComplementary(hex: string): (string | null)[] {

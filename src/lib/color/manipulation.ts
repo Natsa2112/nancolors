@@ -1,5 +1,3 @@
-import { parseHex, convertRgbToHsl, convertHslToRgb } from 'culori/fn'
-import type { RGB, HSL } from '../types'
 import { hexToRgb, rgbToHex, rgbToHsl, hslToRgb } from './convert'
 
 export function lighten(hex: string, amount: number): string | null {
@@ -38,7 +36,7 @@ export function adjustHue(hex: string, degrees: number): string | null {
   const rgb = hexToRgb(hex)
   if (!rgb) return null
   const hsl = rgbToHsl(rgb)
-  hsl.h = ((hsl.h + degrees) % 360 + 360) % 360
+  hsl.h = (((hsl.h + degrees) % 360) + 360) % 360
   return rgbToHex(hslToRgb(hsl))
 }
 

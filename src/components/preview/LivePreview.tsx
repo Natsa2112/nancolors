@@ -9,15 +9,15 @@ import { $previewPalette } from '../../stores/preview.store'
 import type { SemanticRoles, ContrastInfo, Palettes, HarmonyType } from '../../lib/types'
 import { darken, lighten } from '../../lib/color/manipulation'
 
-function getPaletteColors(
-  palettes: Palettes,
-  active: HarmonyType | null
-): string[] {
+function getPaletteColors(palettes: Palettes, active: HarmonyType | null): string[] {
   if (!active) return []
   return palettes[active] ?? []
 }
 
-const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo, palette: string[]) => string> = {
+const CSS_VARS: Record<
+  string,
+  (hex: string, s: SemanticRoles, c: ContrastInfo, palette: string[]) => string
+> = {
   '--p-color-bg': (_, s) => s.background,
   '--p-color-text': (_, s) => s.text,
   '--p-color-navbar-bg': (_, s, __, p) => p[4] ?? p[3] ?? s.surface,
@@ -28,7 +28,7 @@ const CSS_VARS: Record<string, (hex: string, s: SemanticRoles, c: ContrastInfo, 
   '--p-color-card-text': (_, s) => s.text,
   '--p-color-card-border': (_, s) => s.surface,
   '--p-color-btn-bg': (_, s, __, p) => p[1] ?? s.button,
-  '--p-color-btn-text': (_, s, __, p) => s.text,
+  '--p-color-btn-text': (_, s) => s.text,
 }
 
 interface Props {
@@ -44,10 +44,22 @@ export default function LivePreview({ tab }: Props) {
   const activePalette = useStore($previewPalette)
   const containerRef = useRef<HTMLDivElement>(null)
   const rafRef = useRef<number | null>(null)
-  const valuesRef = useRef({ hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette), dark: false })
+  const valuesRef = useRef({
+    hex,
+    semantic,
+    contrast,
+    palette: getPaletteColors(palettes, activePalette),
+    dark: false,
+  })
   const [previewDark, setPreviewDark] = useState(false)
 
-  valuesRef.current = { hex, semantic, contrast, palette: getPaletteColors(palettes, activePalette), dark: previewDark }
+  valuesRef.current = {
+    hex,
+    semantic,
+    contrast,
+    palette: getPaletteColors(palettes, activePalette),
+    dark: previewDark,
+  }
 
   useEffect(() => {
     let running = true
@@ -88,7 +100,12 @@ export default function LivePreview({ tab }: Props) {
   }, [activeTab, tab])
 
   return (
-    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} style={{ display: activeTab !== tab ? 'none' : undefined }}>
+    <div
+      id={`panel-${tab}`}
+      role="tabpanel"
+      aria-labelledby={`tab-${tab}`}
+      style={{ display: activeTab !== tab ? 'none' : undefined }}
+    >
       <div className="preview" ref={containerRef}>
         <div className="preview__toolbar">
           <span className="preview__dot" aria-hidden="true" />
@@ -120,9 +137,15 @@ function PreviewNavbar({ previewDark, onToggle }: { previewDark: boolean; onTogg
         <span className="preview-navbar__logo">NaN</span>
       </div>
       <div className="preview-navbar__center">
-        <a className="preview-navbar__link" href="#">Inicio</a>
-        <a className="preview-navbar__link" href="#">Productos</a>
-        <a className="preview-navbar__link" href="#">Contacto</a>
+        <a className="preview-navbar__link" href="#">
+          Inicio
+        </a>
+        <a className="preview-navbar__link" href="#">
+          Productos
+        </a>
+        <a className="preview-navbar__link" href="#">
+          Contacto
+        </a>
       </div>
       <button
         className={`preview-navbar__theme-btn ${previewDark ? 'preview-navbar__theme-btn--dark' : ''}`}
@@ -130,7 +153,16 @@ function PreviewNavbar({ previewDark, onToggle }: { previewDark: boolean; onTogg
         aria-pressed={previewDark}
         aria-label={previewDark ? 'Modo claro' : 'Modo oscuro'}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
         </svg>
       </button>
@@ -194,13 +226,15 @@ function PreviewCharts() {
       if (!canvas) return
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      const w = canvas.width, h = canvas.height
+      const w = canvas.width,
+        h = canvas.height
       ctx.clearRect(0, 0, w, h)
-      const text = getColor('--p-color-card-text', '#000')
+      const _text = getColor('--p-color-card-text', '#000')
       const bar = getColor('--p-color-btn-bg', '#3b82f6')
       const border = getColor('--p-color-card-border', '#e5e7eb')
       const data = [35, 55, 40, 70, 60, 85]
-      const pad = 24, bw = (w - pad * 2) / data.length - 4
+      const pad = 24,
+        bw = (w - pad * 2) / data.length - 4
       ctx.strokeStyle = border
       ctx.lineWidth = 1
       ctx.beginPath()
@@ -227,10 +261,11 @@ function PreviewCharts() {
       if (!canvas) return
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      const w = canvas.width, h = canvas.height
+      const w = canvas.width,
+        h = canvas.height
       ctx.clearRect(0, 0, w, h)
       const line = getColor('--p-color-btn-bg', '#3b82f6')
-      const text = getColor('--p-color-card-text', '#000')
+      const _text = getColor('--p-color-card-text', '#000')
       const border = getColor('--p-color-card-border', '#e5e7eb')
       const data = [20, 35, 30, 55, 50, 75, 90]
       const pad = 24
@@ -246,7 +281,7 @@ function PreviewCharts() {
       }))
       ctx.beginPath()
       ctx.moveTo(points[0].x, h - 20)
-      points.forEach(p => ctx.lineTo(p.x, p.y))
+      points.forEach((p) => ctx.lineTo(p.x, p.y))
       ctx.lineTo(points[points.length - 1].x, h - 20)
       ctx.closePath()
       const grad = ctx.createLinearGradient(0, 10, 0, h - 20)
@@ -255,12 +290,12 @@ function PreviewCharts() {
       ctx.fillStyle = grad
       ctx.fill()
       ctx.beginPath()
-      points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y))
+      points.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)))
       ctx.strokeStyle = line
       ctx.lineWidth = 2.5
       ctx.lineJoin = 'round'
       ctx.stroke()
-      points.forEach(p => {
+      points.forEach((p) => {
         ctx.beginPath()
         ctx.arc(p.x, p.y, 3, 0, Math.PI * 2)
         ctx.fillStyle = '#fff'
@@ -281,7 +316,8 @@ function PreviewCharts() {
       if (!canvas) return
       const ctx = canvas.getContext('2d')
       if (!ctx) return
-      const w = canvas.width, h = canvas.height
+      const w = canvas.width,
+        h = canvas.height
       ctx.clearRect(0, 0, w, h)
       const colors = [
         getColor('--p-color-btn-bg', '#3b82f6'),
@@ -289,9 +325,11 @@ function PreviewCharts() {
         getColor('--p-color-card-border', '#e5e7eb'),
         getColor('--p-color-text', '#6b7280'),
       ]
-      const text = getColor('--p-color-card-text', '#000')
+      const _text = getColor('--p-color-card-text', '#000')
       const data = [45, 25, 18, 12]
-      const cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 16
+      const cx = w / 2,
+        cy = h / 2,
+        r = Math.min(cx, cy) - 16
       let start = -Math.PI / 2
       data.forEach((v, i) => {
         const angle = (v / 100) * Math.PI * 2
@@ -357,9 +395,13 @@ function PreviewTestimonials() {
   return (
     <div className="preview-testimonials">
       <blockquote className="preview-testimonial">
-        <p className="preview-testimonial__text">"Una herramienta increíble, transformó nuestra forma de trabajar."</p>
+        <p className="preview-testimonial__text">
+          "Una herramienta increíble, transformó nuestra forma de trabajar."
+        </p>
         <div className="preview-testimonial__author">
-          <span className="preview-testimonial__avatar" aria-hidden="true">M</span>
+          <span className="preview-testimonial__avatar" aria-hidden="true">
+            M
+          </span>
           <div>
             <span className="preview-testimonial__name">María García</span>
             <span className="preview-testimonial__role">CEO, TechCorp</span>
@@ -367,9 +409,13 @@ function PreviewTestimonials() {
         </div>
       </blockquote>
       <blockquote className="preview-testimonial">
-        <p className="preview-testimonial__text">"La mejor plataforma que hemos usado. Altamente recomendada."</p>
+        <p className="preview-testimonial__text">
+          "La mejor plataforma que hemos usado. Altamente recomendada."
+        </p>
         <div className="preview-testimonial__author">
-          <span className="preview-testimonial__avatar" aria-hidden="true">C</span>
+          <span className="preview-testimonial__avatar" aria-hidden="true">
+            C
+          </span>
           <div>
             <span className="preview-testimonial__name">Carlos Ruiz</span>
             <span className="preview-testimonial__role">CTO, StartUpX</span>
@@ -383,9 +429,15 @@ function PreviewTestimonials() {
 function PreviewFaq() {
   const [open, setOpen] = useState<number | null>(null)
   const items = [
-    { q: '¿Cómo funciona la plataforma?', a: 'Regístrate gratis y accede a todas las herramientas desde tu panel de control.' },
+    {
+      q: '¿Cómo funciona la plataforma?',
+      a: 'Regístrate gratis y accede a todas las herramientas desde tu panel de control.',
+    },
     { q: '¿Hay periodo de prueba?', a: 'Sí, ofrecemos 14 días de prueba gratuita sin compromiso.' },
-    { q: '¿Puedo cancelar cuando quiera?', a: 'Sin problema. Cancela en cualquier momento desde tu cuenta.' },
+    {
+      q: '¿Puedo cancelar cuando quiera?',
+      a: 'Sin problema. Cancela en cualquier momento desde tu cuenta.',
+    },
   ]
   return (
     <div className="preview-faq">
@@ -398,8 +450,20 @@ function PreviewFaq() {
             aria-expanded={open === i}
           >
             {item.q}
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-              style={{ transform: open === i ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{
+                transform: open === i ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.2s',
+              }}
+            >
               <path d="M6 9l6 6 6-6" />
             </svg>
           </button>
@@ -444,9 +508,18 @@ function PreviewForm() {
 
   return (
     <form className="preview-form" onSubmit={handleSubmit}>
-      <label className="preview-form__label" htmlFor="pv-email">Correo electrónico</label>
-      <input className="preview-form__input" id="pv-email" type="email" placeholder="correo@ejemplo.com" />
-      <label className="preview-form__label" htmlFor="pv-name">Nombre</label>
+      <label className="preview-form__label" htmlFor="pv-email">
+        Correo electrónico
+      </label>
+      <input
+        className="preview-form__input"
+        id="pv-email"
+        type="email"
+        placeholder="correo@ejemplo.com"
+      />
+      <label className="preview-form__label" htmlFor="pv-name">
+        Nombre
+      </label>
       <input className="preview-form__input" id="pv-name" type="text" placeholder="Tu nombre" />
       <button
         className={`preview-btn ${sent ? 'preview-btn--sent' : 'preview-btn--primary'}`}
@@ -460,9 +533,5 @@ function PreviewForm() {
 }
 
 function PreviewFooter() {
-  return (
-    <footer className="preview-footer">
-      &copy; 2026 NaN Colors Preview.
-    </footer>
-  )
+  return <footer className="preview-footer">&copy; 2026 NaN Colors Preview.</footer>
 }

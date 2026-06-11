@@ -37,7 +37,14 @@ export function rgbToHex(rgb: RGB): string {
   const r = rgb.r / 255
   const g = rgb.g / 255
   const b = rgb.b / 255
-  const hex = ((1 << 24) | (Math.round(r * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(b * 255)).toString(16).slice(1)
+  const hex = (
+    (1 << 24) |
+    (Math.round(r * 255) << 16) |
+    (Math.round(g * 255) << 8) |
+    Math.round(b * 255)
+  )
+    .toString(16)
+    .slice(1)
   return `#${hex}`
 }
 

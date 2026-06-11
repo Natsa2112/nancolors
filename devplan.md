@@ -24,6 +24,18 @@
 14. [Estrategia SEO](#14-estrategia-seo)
 15. [Guía de Implementación](#15-guía-de-implementación)
     - 15.14 Uso Obligatorio de Skills y Context7
+16. [Divergencias entre Plan y Realidad](#16-divergencias-entre-plan-y-realidad)
+17. [Dependencias Faltantes](#17-dependencias-faltantes)
+18. [Decisiones de Arquitectura (ADR)](#18-decisiones-de-arquitectura-adr)
+19. [Activación Progresiva](#19-activación-progresiva)
+20. [Performance Budget](#20-performance-budget)
+21. [Estado del Proyecto (Tracking)](#21-estado-del-proyecto-tracking)
+22. [Estrategia de Testing Visual](#22-estrategia-de-testing-visual)
+23. [Observabilidad](#23-observabilidad)
+24. [Dark Mode — Plan Detallado](#24-dark-mode--plan-detallado)
+25. [Accesibilidad WCAG 2.2](#25-accesibilidad-wcag-22)
+26. [PWA / Offline Strategy](#26-pwa--offline-strategy)
+27. [Migración de Versiones](#27-migración-de-versiones)
 
 ---
 
@@ -1984,6 +1996,915 @@ h1, h2, h3, h4, h5, h6 { line-height: 1.2; font-weight: 600; }
   }
 }
 ```
+
+---
+
+## 16. Divergencias entre Plan y Realidad
+
+> **Última actualización:** Junio 2026. Sección obligatoria antes de cada release para mantener el devplan sincronizado con el código.
+
+### 16.1 Estructura de Carpetas — Cambios vs. Plan (Sección 5)
+
+| Planificado | Implementado | Razón |
+|-------------|-------------|-------|
+| `src/components/ui/Button.astro` | No creado | Se usan botones nativos `<button>` con clases CSS en `components.css` |
+| `src/components/ui/Card.astro` | No creado | Contenedores `<div>` con clases `.card` |
+| `src/components/ui/Badge.astro` | No creado | Badges inline con `<span>` |
+| `src/components/ui/Tabs.astro` | `src/components/Tabs.tsx` | Implementado como React Island por la lógica de estado activo |
+| `src/components/ui/Input.astro` | No creado | Inputs nativos con clases CSS |
+| `src/components/ui/Tooltip.astro` | No creado | Tooltips nativos con `title` attribute |
+| `src/components/ui/Skeleton.astro` | No creado | Pendiente — se necesita para estados de carga |
+| `src/components/layout/Header.astro` | No creado | El layout `ToolLayout.astro` absorbe la función del header |
+| `src/components/layout/Footer.astro` | No creado | Footer inline en `ToolLayout.astro` |
+| `src/components/layout/Navigation.astro` | No creado | Navegación integrada en `Tabs.tsx` |
+| `src/components/layout/MobileNav.astro` | No creado | Pendiente — responsive mobile |
+| `src/components/layout/SkipLink.astro` | No creado | Skip link inline en `BaseLayout.astro` |
+| `src/components/color/ColorInput.astro` | No creado | Absorbido por `ColorPicker.tsx` |
+| `src/components/color/ColorBar.astro` | No creado | Absorbido por `PreviewPaletteBar.tsx` |
+| `src/components/color/RecentColors.astro` | No creado | Pendiente — localStorage history |
+| `src/components/share/ShareButton.astro` | No creado | Pendiente — compartir por URL |
+| `src/components/share/SharePanel.tsx` | No creado | Pendiente — compartir por URL |
+| `src/hooks/` (directorio completo) | No creado | La lógica de hooks está inline en componentes React |
+| `src/services/` (directorio completo) | No creado | `analytics.service.ts` y `color.service.ts` no implementados |
+| `src/content/` (directorio completo) | No creado | Content Collections de Astro no utilizadas |
+| `src/pages/palette/[id].astro` | No creado | Pendiente — ruta dinámica para paletas compartidas |
+
+### 16.2 Stores No Planificados
+
+| Store | Archivo | Propósito |
+|-------|---------|-----------|
+| `$theme` | `src/stores/theme.store.ts` | Toggle dark/light con `localStorage` y `prefers-color-scheme` |
+| `$toasts` | `src/stores/toast.store.ts` | Sistema de notificaciones toast (reemplaza tooltips inline) |
+| `$activeTab` | `src/stores/tabs.store.ts` | Tab activo en la herramienta (separado del plan original `ui.store.ts`) |
+| `$preview` | `src/stores/preview.store.ts` | Estado del Live Preview |
+
+### 16.3 Componentes No Planificados
+
+| Componente | Archivo | Propósito |
+|------------|---------|-----------|
+| `CvdPanel.tsx` | `src/components/color/CvdPanel.tsx` | Simulador de daltonismo (protanopia/deuteranopia/tritanopia) |
+| `Toast.tsx` | `src/components/Toast.tsx` | Componente visual de toast notifications |
+| `PreviewPaletteBar.tsx` | `src/components/color/PreviewPaletteBar.tsx` | Barra de paleta en vivo con swatches |
+| `ColorPickerPopover.tsx` | `src/components/color/ColorPickerPopover.tsx` | Popover del selector de color |
+
+### 16.4 Funciones Inline vs. Archivos Separados
+
+| Planificado como archivo | Implementado en | Funciones |
+|--------------------------|----------------|-----------|
+| `src/lib/validation.ts` | `src/lib/color/convert.ts` | `isValidHex()`, `normalizeHex()` |
+| `src/lib/clipboard.ts` | Componentes React inline | `navigator.clipboard.writeText()` directo |
+| `src/lib/utils.ts` | `src/lib/color/convert.ts` | `formatHex()`, `formatRgb()`, `formatHsl()`, `formatOklch()` |
+
+### 16.5 Acciones Pendientes
+
+- [ ] Evaluar si vale la pena crear `src/components/ui/` como design system reutilizable.
+- [ ] Evaluar si `src/hooks/` mejora la reutilización vs. código inline.
+- [ ] Crear `src/pages/palette/[id].astro` para compartir paletas por URL.
+- [ ] Evaluar migrar `isValidHex` y `normalizeHex` a `src/lib/validation.ts`.
+
+---
+
+## 17. Dependencias Faltantes
+
+### 17.1 Dependencias Planificadas No Instaladas
+
+| Dependencia | Propósito en Plan | Estado | Decisión |
+|-------------|-------------------|--------|----------|
+| `lucide-react` / `lucide` | Iconos SVG tree-shakeable | **No instalado** | Usar SVG inline o iconos Unicode. Considerar instalar si se necesitan más de 10 iconos. |
+| `motion` (framer-motion v11/v12) | Animaciones React Islands | **No instalado** | Usar CSS animations + `@keyframes` en `animations.css`. Suficiente para microinteracciones. |
+| `react-hook-form` + `zod` | Formularios tipados | **No instalado** | El formulario del preview es nativo. Solo se necesita validación HEX, ya implementada en `isValidHex()`. |
+| `class-variance-authority` (cva) | Sistema de variantes | **No instalado** | Variantes manuales con clases CSS condicionales. Evaluar si cva simplifica al crecer. |
+| `@astrojs/sitemap` | Sitemap automático | **No instalado** | Crear `public/sitemap.xml` manualmente o instalar antes de producción. |
+| `sentry` | Error tracking | **No instalado** | Fase 2+ según roadmap. No necesario para MVP. |
+| `vite-bundle-visualizer` | Análisis de bundle | **No instalado** | Instalar como devDependency antes de la auditoría de bundle size. |
+| `@playwright/experimental-ct` | Component testing | **No instalado** | Los componentes se testean con E2E. Component testing es opcional. |
+
+### 17.2 Versiones Diferentes al Plan
+
+| Dependencia | Versión Planificada | Versión Instalada | Impacto |
+|-------------|--------------------|--------------------|---------|
+| `astro` | 5.x | **6.4.5** | Breaking changes: output config, integraciones. Ver sección 27. |
+| `nanostores` | 5.x | **1.3.0** | API compatible: `atom()`, `computed()` funcionan igual. Nanostores no tiene v5 — el plan tenía un error. |
+| `@nanostores/react` | — (no planificado) | **1.1.0** | Necesario para `useStore()` en React Islands. Adición correcta. |
+| `culori` | 4.x | **4.0.2** | Coincide. API `culori/fn` funcional. |
+| `lz-string` | latest | **1.5.0** | Coincide. Compresión funcional. |
+| `vitest` | — (en devDeps del plan) | **4.1.8** | Versión actual. Funcional. |
+| `@playwright/test` | — (en devDeps del plan) | **1.60.0** | Versión actual. Funcional. |
+| `react` / `react-dom` | — | **19.2.7** | React 19. Verificar compatibilidad con `@astrojs/react`. |
+
+### 17.3 Dependencias Instaladas No Planificadas
+
+| Dependencia | Propósito |
+|-------------|-----------|
+| `@astrojs/check` (0.9.9) | Type checking para Astro. Beneficioso — mantener. |
+| `@types/react` (19.2.17) | Tipos de React 19. Necesario. |
+| `@types/react-dom` (19.2.3) | Tipos de ReactDOM. Necesario. |
+
+### 17.4 Acciones Pendientes
+
+- [ ] Instalar `@astrojs/sitemap` y configurar en `astro.config.mjs`.
+- [ ] Instalar `vite-bundle-visualizer` para auditoría de bundle.
+- [ ] Evaluar instalar `lucide-react` si se necesitan más de 10 iconos.
+- [ ] Verificar que React 19 no cause problemas con `@astrojs/react`.
+
+---
+
+## 18. Decisiones de Arquitectura (ADR)
+
+> Architecture Decision Records documentan decisiones técnicas tomadas que difieren del plan original. Cada ADR se mantiene como referencia para futuros contribuidores.
+
+### ADR-001: Componentes de Color en `src/components/color/`
+
+- **Fecha:** Junio 2026
+- **Estado:** Aceptada
+- **Contexto:** El plan separaba componentes por dominio UI (`ui/`), color (`color/`), palettes (`palettes/`), semantic (`semantic/`), contrast (`contrast/`), preview (`preview/`), export (`export/`), share (`share/`).
+- **Decisión:** Consolidar componentes de color, palettes, semantic, contrast y CVD en `src/components/color/`. Mantener `preview/` y `export/` separados.
+- **Razón:** La app tiene un solo flujo lineal (color → paletas → semantic → contrast → preview → export). Separar en 8+ subdirectorios creaba complejidad innecesaria para una herramienta de una página.
+- **Consecuencia:** Menos reutilización potencial, pero menor fricción de desarrollo. Si la app crece a múltiples herramientas, reconsiderar.
+
+### ADR-002: Toast Notifications en vez de Tooltips Inline
+
+- **Fecha:** Junio 2026
+- **Estado:** Aceptada
+- **Contexto:** El plan usaba `Tooltip.astro` para feedback de copiar y errores.
+- **Decisión:** Implementar `toast.store.ts` + `Toast.tsx` para feedback temporal.
+- **Razón:** Los tooltips requieren hover/click y se pierden en mobile. Los toasts son visibles siempre y se auto-dismiss. Mejor UX para "Copiado!" y errores.
+- **Consecuencia:** Un store extra y un componente no planificado. Insignificante en bundle.
+
+### ADR-003: Validación Inline en vez de Zod
+
+- **Fecha:** Junio 2026
+- **Estado:** Aceptada
+- **Contexto:** El plan usaba React Hook Form + Zod para validación.
+- **Decisión:** Validación manual con `isValidHex()` y `normalizeHex()` en `convert.ts`.
+- **Razón:** Solo se valida un campo (HEX input). Zod añade ~15KB y una capa de abstracción innecesaria para un solo input. `RegExp` es suficiente.
+- **Consecuencia:** Sin schemas tipados reutilizables. Si se añaden formularios más complejos (ej: configuración de exportación), reconsiderar.
+
+### ADR-004: CSS Modular en vez de Utility-First
+
+- **Fecha:** Junio 2026
+- **Estado:** Aceptada
+- **Contexto:** El plan especificaba CSS Modular con Custom Properties, sin Tailwind.
+- **Decisión:** Mantener CSS modular con archivos por dominio en `src/styles/`. Clases helper manuales en `utilities.css`.
+- **Razón:** Control total, cero dependencias de estilos, bundle CSS mínimo. Las utility classes son limitadas (~20 clases) vs. Tailwind (~5000+).
+- **Consecuencia:** Más tiempo escribiendo CSS personalizado. Aceptado para una herramienta de una página.
+
+### ADR-005: `client:idle` como Directiva Principal
+
+- **Fecha:** Junio 2026
+- **Estado:** Aceptada
+- **Contexto:** El plan usaba `client:load` y `client:visible` para hidratación.
+- **Decisión:** Usar `client:idle` para todas las React Islands.
+- **Razón:** `client:idle` hidrata cuando el browser está idle, mejorando LCP sin sacrificar interactividad temprana. `client:visible` causaría demora si el usuario hace scroll rápido. `client:load` carga todo inmediatamente.
+- **Consecuencia:** Todas las islas se hidratan pronto. El bundle total de JS se descarga temprano. Aceptado para una herramienta donde el usuario interactúa inmediatamente.
+
+---
+
+## 19. Activación Progresiva (Progressive Enhancement)
+
+> La app debe ser funcional con JavaScript deshabilitado, ofreciendo al menos contenido estático útil.
+
+### 19.1 Estrategia por Nivel
+
+| Nivel | JS | Funcionalidad Disponible |
+|-------|-----|--------------------------|
+| **Nivel 0** (JS off) | Deshabilitado | HTML estático: título, descripción, páginas informativas (about, accessibility, terms, privacy). Imagen OG. Links de navegación. |
+| **Nivel 1** (JS parcial) | Solo inline scripts | El `<script>` inline en `index.astro` lee `?c=` del URL y llama `setHex()` — esto SÍ requiere JS. Sin JS, el color queda en el default `#FF6B35`. |
+| **Nivel 2** (JS completo) | Habilitado | Toda la interactividad: color picker, paletas, semantic, contrast, preview, export, share, dark mode. |
+
+### 19.2 Contenido con JS Deshabilitado
+
+Las páginas estáticas (`/about`, `/accessibility`, `/terms`, `/privacy`) son 100% funcionales sin JS — son contenido Astro puro.
+
+La página principal (`/`) muestra:
+- Título "NaN Colors" y descripción.
+- El layout `ToolLayout.astro` renderiza el HTML del sidebar.
+- Las React Islands (`ColorPicker`, `Tabs`, etc.) **no se hidratan** — el usuario ve el HTML estático del componente o un fallback.
+- Los componentes Astro (`PreviewNavbar`, `PreviewHero`, etc.) **sí se renderizan** en SSR con los colores default.
+
+### 19.3 `<noscript>` Implementation
+
+```astro
+<!-- En BaseLayout.astro, dentro de <body> -->
+<noscript>
+  <div class="noscript-banner" role="alert">
+    <p>
+      NaN Colors requiere JavaScript para las herramientas interactivas.
+      Las páginas informativas funcionan sin JavaScript.
+    </p>
+  </div>
+</noscript>
+```
+
+Estilo del banner:
+```css
+.noscript-banner {
+  background: var(--orange-500);
+  color: var(--white);
+  padding: var(--space-4);
+  text-align: center;
+  font-weight: 600;
+}
+```
+
+### 19.4 Fallback para Live Preview
+
+El Live Preview es un React Island — sin JS, los componentes `Preview*` (Astro) se renderizan con los colores CSS default de `base.css` (`--p-color-*`). El usuario ve un preview con colores genéricos, no con su paleta seleccionada. Esto es aceptable como fallback.
+
+### 19.5 URL Sharing sin JS
+
+La función `decodePalette()` está en un `<script>` inline en `index.astro` (no es un Island). Sin JS, el parámetro `?c=` se ignora y el color queda en el default. **Esto es una limitación conocida.** La página `/palette/[id].astro` (pendiente) resolverá esto con SSR.
+
+---
+
+## 20. Performance Budget
+
+### 20.1 Métricas Objetivo
+
+| Métrica | Objetivo | Herramienta de Medición |
+|---------|----------|------------------------|
+| Lighthouse Performance | ≥ 95 | Lighthouse CLI |
+| Lighthouse Accessibility | ≥ 95 | Lighthouse CLI |
+| Lighthouse Best Practices | ≥ 95 | Lighthouse CLI |
+| Lighthouse SEO | ≥ 95 | Lighthouse CLI |
+| LCP (Largest Contentful Paint) | < 1.5s | Web Vitals / Lighthouse |
+| FID (First Input Delay) | < 50ms | Web Vitals / CrUX |
+| CLS (Cumulative Layout Shift) | < 0.05 | Web Vitals / Lighthouse |
+| TTI (Time to Interactive) | < 2.0s | Lighthouse |
+| Total Bundle Size (JS) | < 200KB gzipped | `vite-bundle-visualizer` |
+| Total CSS Size | < 30KB gzipped | Build output |
+
+### 20.2 Budget por Archivo CSS
+
+| Archivo | Budget | Función |
+|---------|--------|---------|
+| `base.css` | < 4KB | Reset, global tokens, tipografía |
+| `layout.css` | < 3KB | Grid, contenedores |
+| `components.css` | < 5KB | Button, Card, Badge, Input, Tooltip |
+| `color.css` | < 3KB | ColorSwatch, ColorBar |
+| `palettes.css` | < 3KB | PaletteGrid, PaletteCard |
+| `semantic.css` | < 2KB | SemanticPanel |
+| `contrast.css` | < 2KB | ContrastGauge, scores |
+| `preview.css` | < 6KB | Live Preview (7 componentes) |
+| `export.css` | < 2KB | ExportBar, format buttons |
+| `navigation.css` | < 3KB | Header, Footer, Nav |
+| `animations.css` | < 2KB | Keyframes, transiciones |
+| `utilities.css` | < 2KB | .flex, .grid, .sr-only |
+| `themes.css` | < 1KB | Dark mode variables |
+| **Total** | **< 38KB** | (target: < 30KB uncompressed ≈ < 10KB gzipped) |
+
+### 20.3 Budget por Isla React
+
+| Isla | Budget (gzipped) | Contenido |
+|------|-------------------|-----------|
+| `ColorPicker.tsx` | < 15KB | Canvas + input + eyedropper |
+| `Tabs.tsx` | < 5KB | Lógica de tabs |
+| `PaletteGenerator.tsx` | < 10KB | Grid + cards de paletas |
+| `SemanticPanel.tsx` | < 8KB | 12 semantic cards |
+| `ContrastPanel.tsx` | < 8KB | Tabla de contrastes |
+| `CvdPanel.tsx` | < 6KB | Toggle CVD + simulación |
+| `LivePreview.tsx` | < 10KB | CSS vars updater + 7 subcomponentes |
+| `ExportPanel.tsx` | < 8KB | Dropdown + generación |
+| `Toast.tsx` | < 3KB | Notificaciones |
+| `PreviewPaletteBar.tsx` | < 5KB | Barra de paletas en vivo |
+| **Total** | **< 78KB** | Target: < 200KB con React runtime |
+
+### 20.4 Budget de Imágenes
+
+| Archivo | Budget | Formato |
+|---------|--------|---------|
+| `favicon.svg` | < 2KB | SVG |
+| `favicon.ico` | < 5KB | ICO (fallback) |
+| `og-image.png` | < 200KB | PNG, 1200×630px |
+| Logo (si se añade) | < 10KB | SVG preferido |
+
+### 20.5 Verificación
+
+```bash
+# Bundle analysis
+npx vite-bundle-visualizer
+
+# Lighthouse CI
+npx lighthouse-ci autorun --config=lighthouserc.json
+
+# CSS size audit
+find src/styles -name "*.css" -exec wc -c {} + | sort -n
+```
+
+---
+
+## 21. Estado del Proyecto (Tracking)
+
+> **Actualizado:** Junio 2026. Mapeo de cada fase del roadmap (Sección 6) a su estado real de implementación.
+
+### 21.1 Resumen por Fase
+
+| Fase | Plan | Estado | % Completado | Bloqueado Por |
+|------|------|--------|-------------|---------------|
+| **Fase 0:** Fundación | Días 1–2 | En progreso | **90%** | ESLint/Prettier no configurados |
+| **Fase 1:** Input + Paletas | Días 3–7 | En progreso | **70%** | Faltan UI primitives y layout components |
+| **Fase 2:** Semántico + Contraste | Días 8–11 | En progreso | **80%** | Faltan algunos subcomponentes |
+| **Fase 3:** Live Preview | Días 12–15 | En progreso | **85%** | LivePreview funcional, faltan transiciones |
+| **Fase 4:** Export + Share + Pages | Días 16–19 | En progreso | **70%** | Falta SharePanel, clipboard.ts |
+| **Fase 5:** Pulido + SEO + A11Y | Días 20–22 | En progreso | **40%** | Faltan animaciones, i18n, analytics, WCAG audit |
+| **Fase 6:** Tests + CI/CD + Deploy | Días 23–25 | Iniciado | **20%** | Tests unitarios pasan, faltan E2E, CI deploy |
+
+### 21.2 Detalle por Fase
+
+#### Fase 0 — 90%
+
+| Tarea | Estado |
+|-------|--------|
+| 0.1 Inicializar proyecto Astro + React | Completada |
+| 0.2 Instalar dependencias | Completada (parcial — faltan algunas) |
+| 0.3 Configurar tsconfig.json con alias | Completada |
+| 0.4 Configurar ESLint + Prettier | **Pendiente** |
+| 0.5 Crear types.ts | Completada |
+| 0.6 Crear constants.ts | Completada |
+| 0.7 Crear convert.ts | Completada |
+| 0.8 Crear luminance.ts | Completada |
+| 0.9 Crear contrast.ts | Completada |
+| 0.10–0.11 Tests unitarios | Completados (91 tests passing) |
+| 0.12–0.14 CSS base/layout/utilities | Completados |
+| 0.15 BaseLayout.astro | Completada |
+| 0.16 robots.txt + favicon | Completados |
+| 0.17 _headers | Completado (parcial — falta CSP) |
+| 0.18–0.19 Stores + tests | Completados |
+| 0.20 Verificar flujo | Completado |
+
+#### Fase 1 — 70%
+
+| Tarea | Estado |
+|-------|--------|
+| 1.1 manipulation.ts | Completada |
+| 1.2 harmonies.ts | Completada |
+| 1.3 Tests de armonías | Completados |
+| 1.4–1.5 UI primitives (Button, Card, etc.) | **No creados** — se usan elementos nativos |
+| 1.6–1.9 Layout components (Header, Footer, Nav) | **No creados** — absorbidos por ToolLayout |
+| 1.10–1.13 Color components (Swatch, Bar, Input) | Completados (consolidados en ColorPicker) |
+| 1.14 ColorPicker.tsx | Completado |
+| 1.15 Tests de ColorPicker | **Pendientes** |
+| 1.16 palettes.store.ts | Completada |
+| 1.17 ui.store.ts → tabs.store.ts | Completada (renombrada) |
+| 1.18–1.22 Palette components | Completados |
+| 1.23 index.astro | Completada |
+| 1.24 utils.ts | Completada (inline en convert.ts) |
+| 1.25 Debounce | **Pendiente** |
+| 1.26 Test E2E de paletas | **Pendiente** |
+
+#### Fase 2 — 80%
+
+| Tarea | Estado |
+|-------|--------|
+| 2.1 semantic.ts | Completada |
+| 2.2 Tests de semantic | Completados |
+| 2.3 semantic.store.ts | Completada |
+| 2.4 contrast.store.ts | Completada |
+| 2.5 Tests de contrast.store | **Pendientes** |
+| 2.6–2.9 SemanticPanel + subcomponentes | Completados (consolidados en SemanticPanel.tsx) |
+| 2.10–2.14 ContrastPanel + subcomponentes | Completados (consolidados en ContrastPanel.tsx) |
+| 2.15 Integrar en index.astro | Completada |
+| 2.16 Test E2E | **Pendiente** |
+
+#### Fase 3 — 85%
+
+| Tarea | Estado |
+|-------|--------|
+| 3.1 preview.css | Completada |
+| 3.2–3.8 Preview* components | Completados (6 de 7 — falta PreviewAlert) |
+| 3.9 LivePreview.tsx | Completado |
+| 3.10 Transiciones CSS | **Pendientes** |
+| 3.11 Integrar en index.astro | Completada |
+| 3.12 Verificar responsive | **Pendiente** |
+| 3.13 Verificar no-flickering | **Pendiente** |
+
+#### Fase 4 — 70%
+
+| Tarea | Estado |
+|-------|--------|
+| 4.1 clipboard.ts | **No creado** — inline en componentes |
+| 4.2 export.service.ts | Completada |
+| 4.3 Tests de export | **Pendientes** |
+| 4.4 validation.ts | **No creado** — inline en convert.ts |
+| 4.5 Tests de validation | **Pendientes** |
+| 4.6 share.ts | Completada |
+| 4.7 Tests de share | **Pendientes** |
+| 4.8 share.store.ts | **No creado** |
+| 4.9–4.13 ExportPanel + subcomponentes | Completados (consolidados) |
+| 4.14–4.15 ShareButton + SharePanel | **No creados** |
+| 4.16 Integrar en index.astro | Completada |
+| 4.17 api/color.json.ts | Completada |
+| 4.18 palette/[id].astro | **No creado** |
+| 4.19–4.23 Páginas informativas | Completadas (about, accessibility, 404, terms, privacy) |
+| 4.24 Tests de clipboard | **Pendientes** |
+
+#### Fase 5 — 40%
+
+| Tarea | Estado |
+|-------|--------|
+| 5.1 cvd.ts | Completada |
+| 5.2 Tests de cvd | Completados |
+| 5.3 Integrar CVD en ContrastPanel | Completada (como CvdPanel separado) |
+| 5.4 animations.css | Completada |
+| 5.5–5.8 Aplicar animaciones | **Pendientes** |
+| 5.9 Verificar prefers-reduced-motion | **Pendiente** |
+| 5.10 Estados vacío/carga/error | **Pendientes** |
+| 5.11–5.12 JSON-LD + OG tags | **Pendientes** |
+| 5.13 Configurar @astrojs/sitemap | **Pendiente** (no instalado) |
+| 5.14–5.22 Verificaciones de accesibilidad | **Pendientes** |
+| 5.23 Lighthouse audit | **Pendiente** |
+| 5.24 Verificar bundle size | **Pendiente** |
+| 5.25 analytics.service.ts | **No creado** |
+| 5.26 i18n locales | **No creados** |
+| 5.27 themes.css | Completada (parcial — falta dark mode completo) |
+
+#### Fase 6 — 20%
+
+| Tarea | Estado |
+|-------|--------|
+| 6.1 Tests de manipulation | Completados |
+| 6.2 Tests de palettes.store | **Pendientes** |
+| 6.3 Tests de semantic.store | **Pendientes** |
+| 6.4 Tests de ExportPanel | **Pendientes** |
+| 6.5 Test E2E flujo completo | **Pendiente** |
+| 6.6 Test E2E URL compartida | **Pendiente** |
+| 6.7 Test accesibilidad automatizado | **Pendiente** |
+| 6.8 CI pipeline (.github/workflows) | **Pendiente** |
+| 6.9 Configurar Cloudflare Pages | **Pendiente** |
+| 6.10 Configurar dominio | **Pendiente** |
+| 6.11 Configurar Plausible | **Pendiente** |
+| 6.12–6.14 Redirects, headers, Lighthouse CI | **Pendientes** |
+| 6.15 Post-mortem | **Pendiente** |
+
+### 21.3 Próximas Tareas Prioritarias
+
+1. **Alto:** Completar SharePanel + palette/[id].astro (compartir por URL)
+2. **Alto:** Configurar ESLint + Prettier
+3. **Alto:** Tests E2E del flujo completo
+4. **Medio:** Animaciones CSS (stagger, slide, spring)
+5. **Medio:** CI pipeline en GitHub Actions
+6. **Medio:** JSON-LD + OG tags
+7. **Bajo:** i18n, analytics, dark mode toggle UI
+
+---
+
+## 22. Estrategia de Testing Visual
+
+### 22.1 Visual Regression Testing
+
+**Herramienta:** Playwright screenshot comparisons.
+
+**Configuración:**
+```typescript
+// playwright.config.ts — agregar:
+expect: {
+  toHaveScreenshot: {
+    maxDiffPixelRatio: 0.01,
+    threshold: 0.2,
+  },
+},
+```
+
+**Screenshots a capturar:**
+
+| Página | Viewport | Nombre |
+|--------|----------|--------|
+| `/` (herramienta) | 1440×900 | `home-desktop.png` |
+| `/` (herramienta) | 375×812 | `home-mobile.png` |
+| `/about` | 1440×900 | `about-desktop.png` |
+| `/accessibility` | 1440×900 | `accessibility-desktop.png` |
+| `/404` | 1440×900 | `404-desktop.png` |
+| Live Preview (color #FF6B35) | 1440×900 | `preview-default.png` |
+| Live Preview (color #0000FF) | 1440×900 | `preview-blue.png` |
+
+**Ejecución:**
+```bash
+# Actualizar snapshots
+npx playwright test --update-snapshots
+
+# Ejecutar regression tests
+npx playwright test --grep "visual"
+```
+
+### 22.2 Snapshot Testing para Exportación
+
+```typescript
+// __tests__/lib/export.test.ts
+test('CSS export matches snapshot', () => {
+  const result = toCSSVariables('#ff6b35', { complementary: ['#355cff'] })
+  expect(result).toMatchSnapshot()
+})
+
+test('JSON export matches snapshot', () => {
+  const result = toJSON('#ff6b35', {r:255,g:107,b:53}, ...)
+  expect(result).toMatchSnapshot()
+})
+```
+
+### 22.3 Accessibility Testing Automatizado
+
+**Herramienta:** `@axe-core/playwright`
+
+**Instalación:**
+```bash
+pnpm add -D @axe-core/playwright
+```
+
+**Implementación:**
+```typescript
+// __tests__/a11y/home.spec.ts
+import AxeBuilder from '@axe-core/playwright'
+
+test('home page has no accessibility violations', async ({ page }) => {
+  await page.goto('/')
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+    .analyze()
+  expect(results.violations).toEqual([])
+})
+
+test('about page has no accessibility violations', async ({ page }) => {
+  await page.goto('/about')
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])
+    .analyze()
+  expect(results.violations).toEqual([])
+})
+```
+
+**Tags WCAG a incluir:**
+- `wcag2a` — WCAG 2.0 Level A
+- `wcag2aa` — WCAG 2.0 Level AA
+- `wcag22aa` — WCAG 2.2 Level AA (nueva)
+
+---
+
+## 23. Observabilidad
+
+### 23.1 Error Boundaries en React Islands
+
+Cada React Island debe tener un Error Boundary que muestre fallback UI en vez de crashear toda la página.
+
+**Patrón:**
+```tsx
+// components/ErrorBoundary.tsx
+import React from 'react'
+
+interface Props {
+  children: React.ReactNode
+  fallback?: React.ReactNode
+}
+
+interface State {
+  hasError: boolean
+  error: Error | null
+}
+
+export class ErrorBoundary extends React.Component<Props, State> {
+  state: State = { hasError: false, error: null }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div class="error-boundary" role="alert">
+          <p>Algo salió mal. <button onClick={() => this.setState({ hasError: false })}>Reintentar</button></p>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+```
+
+**Uso en index.astro:**
+```astro
+<ErrorBoundary client:idle>
+  <ColorPicker client:idle />
+</ErrorBoundary>
+```
+
+### 23.2 Fallback UI para Islas que Fallan
+
+| Isla | Fallback si falla |
+|------|-------------------|
+| `ColorPicker` | Input HEX nativo + texto "Selector visual no disponible" |
+| `Tabs` | Links de navegación horizontales |
+| `PaletteGenerator` | Mensaje "Generador de paletas no disponible" |
+| `SemanticPanel` | Mensaje "Panel semántico no disponible" |
+| `ContrastPanel` | Mensaje "Panel de contraste no disponible" |
+| `LivePreview` | Preview estático con colores CSS default |
+| `ExportPanel` | Texto con colores en formato plano |
+
+### 23.3 Performance Monitoring (Producción)
+
+**Web Vitals con Plausible:**
+```typescript
+// services/analytics.service.ts
+import { onCLS, onFID, onLCP } from 'web-vitals'
+
+function sendToPlausible(metric: { name: string; value: number; id: string }) {
+  if (typeof window !== 'undefined' && window.plausible) {
+    window.plausible('web-vital', {
+      props: {
+        metric_name: metric.name,
+        metric_value: metric.value,
+        metric_id: metric.id,
+      },
+    })
+  }
+}
+
+onCLS(sendToPlausible)
+onFID(sendToPlausible)
+onLCP(sendToPlausible)
+```
+
+### 23.4 Logging de Errores en Producción
+
+Para el MVP, usar `console.error` con contexto estructurado:
+```typescript
+function logError(context: string, error: unknown) {
+  console.error(`[NaNColors] ${context}:`, error)
+  // Fase 2+: enviar a Sentry
+}
+
+// Uso:
+logError('clipboard', error)      // Copiar al portapapeles falló
+logError('share', error)          // Generar URL falló
+logError('export', error)         // Generar exportación falló
+logError('color-parsing', error)  // Parsear color falló
+```
+
+---
+
+## 24. Dark Mode — Plan Detallado
+
+### 24.1 Estado Actual
+
+| Componente | Estado |
+|------------|--------|
+| `src/stores/theme.store.ts` | Completado — `$theme`, `toggleTheme()`, `initTheme()`, persistencia en `localStorage('nan-theme')`, detección de `prefers-color-scheme` |
+| `src/styles/themes.css` | Completado — Variables `--app-*` para `[data-theme="dark"]` |
+| Toggle UI | **No creado** — Falta botón toggle en la interfaz |
+
+### 24.2 Variables que Cambian en Dark Mode
+
+```css
+/* themes.css — Variables que SÍ cambian */
+[data-theme="dark"] {
+  --color-background: #121212;    /* Fondo principal */
+  --color-foreground: #e0e0e0;    /* Texto principal */
+  --color-surface: #1e1e1e;       /* Superficies elevadas */
+  --color-border: #333;           /* Bordes */
+  --color-text-muted: #999;       /* Texto secundario */
+  --card-bg: #1e1e1e;             /* Fondo de cards */
+  --input-bg: #1e1e1e;            /* Fondo de inputs */
+  --gray-100: #1e1e1e;            /* Reasignación de grises */
+  --gray-200: #333;
+  --gray-300: #555;
+  --gray-500: #999;
+  --gray-700: #ccc;
+  --gray-900: #f5f5f5;            /* Invertido */
+  --code-bg: #0d0d0d;
+  --code-fg: #e0e0e0;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+```
+
+### 24.3 Variables que NO Cambian (Preview)
+
+Las `--p-color-*` variables **NO se modifican** en dark mode. El preview muestra la paleta del usuario tal cual — el dark mode solo afecta el **shell de la aplicación**, no el preview.
+
+**Razón:** El usuario quiere ver cómo se ve SU paleta, no una reinterpretación. Si se invirtieran los colores del preview, el usuario no podría evaluar su paleta en fondo claro.
+
+### 24.4 Toggle UI — Implementación Pendiente
+
+```astro
+<!-- En Header.astro o ToolLayout.astro -->
+<button
+  class="theme-toggle"
+  onClick="toggleTheme()"
+  aria-label="Cambiar tema"
+  title="Cambiar entre modo claro y oscuro"
+>
+  <!-- Icono sol/luna con CSS -->
+  <span class="theme-toggle__icon" aria-hidden="true">
+    ☀️ / 🌙
+  </span>
+</button>
+```
+
+**Integración:**
+1. Llamar `initTheme()` en `BaseLayout.astro` `<script>` inline (antes de la hidratación).
+2. El toggle llama `toggleTheme()` que actualiza `data-theme` en `<html>` y persiste en `localStorage`.
+3. Nano Store `$theme` se actualiza para que los React Islands reaccionen.
+
+### 24.5 Persistencia
+
+| Mecanismo | Descripción |
+|-----------|-------------|
+| `localStorage('nan-theme')` | Persiste la preferencia entre sesiones |
+| `prefers-color-scheme: dark` | Detecta preferencia del SO si no hay valor guardado |
+| Default | `'light'` si no hay nada guardado y no hay media query |
+
+---
+
+## 25. Accesibilidad WCAG 2.2
+
+> El plan cubre WCAG 2.1 AA. WCAG 2.2 (publicado Oct 2023) agrega 9 nuevos criterios. Los siguientes son relevantes para NaN Colors.
+
+### 25.1 Criterios WCAG 2.2 Aplicables
+
+| Criterio | Nombre | Relevancia para NaN Colors | Estado |
+|----------|--------|---------------------------|--------|
+| **2.4.11** | Focus Not Obscured (Minimum) | Los focus rings de ColorPicker, Tabs, ExportPanel no deben estar ocultos por elementos fijos (action bar, toast) | Pendiente |
+| **2.4.12** | Focus Not Obscured (Enhanced) | Meta — AAA, no requerido para AA | N/A |
+| **2.4.13** | Focus Appearance | Focus ring debe ser ≥ 2px, contraste ≥ 3:1 contra fondo | Pendiente |
+| **2.5.7** | Dragging Movements | El color picker visual debe tener alternativa de input (ya tiene HEX input) | Completado |
+| **2.5.8** | Target Size (Minimum) | Botones y swatches ≥ 24×24px, preferible 44×44px | Parcial |
+| **3.2.6** | Consistent Help | Link "Feedback" o "Ayuda" en ubicación consistente en todas las páginas | Pendiente |
+| **3.3.7** | Redundant Entry | No pedir el mismo HEX dos veces (input + share) | Completado |
+| **3.3.8** | Accessible Authentication (Minimum) | No aplica — sin autenticación | N/A |
+| **3.3.9** | Accessible Authentication (Enhanced) | No aplica — sin autenticación | N/A |
+
+### 25.2 Implementación Pendiente
+
+#### 2.4.11 Focus Not Obscured
+```css
+/* Asegurar que los focus rings no estén detrás de elementos fijos */
+.color-picker:focus-within {
+  z-index: 10; /* Por encima de action bar */
+}
+
+/* El toast no debe cubrir el elemento con foco */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-4);
+  z-index: 50;
+  /* No cubre el foco del input principal */
+}
+```
+
+#### 2.4.13 Focus Appearance
+```css
+/* Focus ring consistente en todos los elementos interactivos */
+:focus-visible {
+  outline: 3px solid var(--blue-500);
+  outline-offset: 2px;
+}
+
+/* Eliminar outline por defecto */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+```
+
+#### 2.5.8 Target Size
+```css
+/* Todos los targets interactivos ≥ 44×44px */
+button, [role="button"], .swatch, .tab {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Excepción: tabs en mobile pueden ser más pequeños si hay scroll horizontal */
+@media (max-width: 640px) {
+  .tab {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+```
+
+#### 3.2.6 Consistent Help
+El link "Feedback" o "GitHub" debe estar en la misma posición en todas las páginas (header o footer, no mover entre páginas).
+
+---
+
+## 26. PWA / Offline Strategy
+
+> **Estado:** Futuro (post-lanzamiento). Esta sección define la estrategia para implementación posterior.
+
+### 26.1 Stack Recomendado
+
+| Herramienta | Propósito |
+|-------------|-----------|
+| `@vite-pwa/astro` | Integración de Service Worker con Astro |
+| Workbox (incluido) | Caching strategies predefinidas |
+
+**Instalación futura:**
+```bash
+pnpm add -D @vite-pwa/astro
+```
+
+### 26.2 Estrategia de Caché
+
+| Recurso | Estrategia | TTL |
+|---------|-----------|-----|
+| HTML (páginas estáticas) | CacheFirst | 7 días |
+| CSS | CacheFirst | 30 días |
+| Fonts (WOFF2) | CacheFirst | 365 días |
+| JavaScript (islas) | StaleWhileRevalidate | 7 días |
+| Favicon/Icons | CacheFirst | 365 días |
+| API endpoint (`/api/color.json`) | NetworkFirst | 0 (siempre red) |
+| Analytics (Plausible) | NetworkOnly | Nunca caché |
+
+### 26.3 Qué Funciona Offline
+
+| Funcionalidad | Offline | Razón |
+|---------------|---------|-------|
+| Páginas informativas | Sí | HTML + CSS cached |
+| Color Picker | Parcial | Canvas funciona, pero sin eyedropper nativo |
+| Paletas | Sí | Algoritmos en JS bundled |
+| Semantic/Contrast | Sí | Algoritmos en JS bundled |
+| Live Preview | Sí | CSS variables locales |
+| Export (generar código) | Sí | String generation en JS |
+| Copy to clipboard | Sí | `navigator.clipboard` local |
+| Share URL | Sí | Generación local |
+| API endpoint | No | Requiere red |
+| Analytics | No | Requiere red |
+
+### 26.4 Configuración de Manifest
+
+```json
+// public/manifest.json (futuro)
+{
+  "name": "NaN Colors — Generador de Paletas Accesibles",
+  "short_name": "NaN Colors",
+  "description": "Genera paletas de color armónicas con validación WCAG",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#6366F1",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
+```
+
+---
+
+## 27. Migración de Versiones
+
+### 27.1 Astro v5 → v6
+
+El proyecto se inicializó con Astro 6.x directamente, pero el plan mencionaba v5.x.
+
+**Cambios clave v5 → v6:**
+
+| Área | Cambio | Impacto en NaN Colors |
+|------|--------|-----------------------|
+| `output` config | `'static'` sigue siendo válido | Sin impacto |
+| Integraciones | `@astrojs/react` sigue funcionando | Sin impacto |
+| Server Islands | Nuevo feature en v6 | No utilizado — sin impacto |
+| Content Layer | Reemplaza Content Collections | No utilizado — sin impacto |
+| `astro:actions` | Nuevo API para forms | No utilizado — sin impacto |
+| Vite 6 | Bundler actualizado | Sin impacto visible |
+| Node.js ≥ 22 | Requerido | Ya configurado en `package.json` |
+
+**Conclusión:** La migración v5→v6 no afecta el proyecto porque se inicializó directamente en v6. Solo es relevante si alguien referencia la documentación de v5.
+
+### 27.2 Nanostores — Compatibilidad
+
+El plan decía "nanostores 5.x", pero nanostores no tiene v5. La versión actual es **1.3.0**. La API es estable desde v0.9+.
+
+**Funciones utilizadas y su estado:**
+
+| Función | Estado | Notas |
+|---------|--------|-------|
+| `atom()` | Estable | API fundamental, no cambiará |
+| `computed()` | Estable | Deriva stores, API estable |
+| `useStore()` (`@nanostores/react`) | Estable | Hook para React, API estable |
+
+**No se necesita migración.** El plan tenía un error de versión.
+
+### 27.3 React 19
+
+React 19 trae cambios que podrían afectar:
+
+| Cambio | Impacto |
+|--------|---------|
+| `use()` hook nuevo | No utilizado — sin impacto |
+| Ref como prop | Sin impacto (ya se usaba `forwardRef` si era necesario) |
+| Mejoras de Server Components | No utilizado (Astro maneja SSR) |
+| Eliminación de `defaultProps` | Verificar que ningún componente use `defaultProps` |
+| Mejoras de hydration | Beneficioso — mejor performance |
+
+### 27.4 Plan de Actualización Futuro
+
+| Dependencia | Acción | Frecuencia |
+|-------------|--------|------------|
+| `astro` | Actualizar cuando salga v6.x minor | Mensual |
+| `react` / `react-dom` | Actualizar en minor releases | Trimestral |
+| `nanostores` | Actualizar si hay breaking changes | Según changelog |
+| `culori` | Actualizar en minor releases | Trimestral |
+| `vitest` | Actualizar en minor releases | Trimestral |
+| `@playwright/test` | Actualizar en minor releases | Trimestral |
 
 ---
 
