@@ -20,6 +20,30 @@
   }
 }
 
+/* ========== SLIDE DOWN + FADE ========== */
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== SCALE IN (for panels) ========== */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* ========== STAGGER ========== */
 .stagger > * {
   opacity: 0;
@@ -64,8 +88,52 @@
   }
 }
 
+@keyframes springBounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(0.92);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .spring-in {
   animation: springIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.spring-bounce {
+  animation: springBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ========== PANEL TRANSITION ========== */
+.panel-enter {
+  animation: scaleIn 0.2s ease forwards;
+}
+
+/* ========== COPY CHECKMARK ========== */
+@keyframes checkPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.copy-check {
+  animation: checkPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  display: inline-flex;
 }
 
 /* ========== COUNTER ========== */
@@ -102,4 +170,37 @@
 
 .pulse {
   animation: pulse 2s ease-in-out infinite;
+}
+
+/* ========== SWATCH CLICK RIPPLE ========== */
+@keyframes swatchClick {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
+  }
+}
+
+.swatch-click {
+  animation: swatchClick 0.4s ease-out;
+}
+
+/* ========== TOAST ENTER ========== */
+@keyframes toastEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+  }
+  60% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-enter {
+  animation: toastEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }

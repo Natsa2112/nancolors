@@ -42,6 +42,7 @@ export default function PaletteGenerator({ tab }: Props) {
       aria-labelledby={`tab-${tab}`}
       style={{ display: activeTab !== tab ? 'none' : undefined }}
     >
+      <div className="stagger" key={activeTab}>
       {HARMONY_TYPES.map((type) => {
         const colors = palettes[type]
         const isActive = activePalette === type
@@ -79,6 +80,7 @@ export default function PaletteGenerator({ tab }: Props) {
           </div>
         )
       })}
+      </div>
 
       <CustomPalette />
     </div>

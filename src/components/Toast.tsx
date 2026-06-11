@@ -9,7 +9,7 @@ export default function Toast() {
   return (
     <div className="toast-container" role="status" aria-live="polite">
       {toasts.map((t) => (
-        <div key={t.id} className="toast">
+        <div key={t.id} className="toast toast-enter">
           {t.message}
         </div>
       ))}
